@@ -1,0 +1,66 @@
+name: Side Step CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+env:
+  GODOT_VERSION: "4.5"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Run GUT Tests
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Godot
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip
+          unzip -q Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip
+          mv Godot_v${GODOT_VERSION}-stable_linux.x86_64 /usr/local/bin/godot
+          chmod +x /usr/local/bin/godot
+
+      - name: Import project
+        run: |
+          godot --headless --import . 2>&1 || true
+
+      - name: Run unit tests
+        run: |
+          godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://test/unit -gexit 2>&1
+        timeout-minutes: 5
+
+      - name: Run integration tests
+        run: |
+          godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://test/integration -gexit 2>&1
+        timeout-minutes: 5
+
+  validate:
+    runs-on: ubuntu-latest
+    name: Validate Project
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check project structure
+        run: |
+          echo "Validating project structure..."
+          test -f project.godot || (echo "ERROR: project.godot not found" && exit 1)
+          test -d autoload || (echo "ERROR: autoload/ not found" && exit 1)
+          test -d scripts || (echo "ERROR: scripts/ not found" && exit 1)
+          test -d scenes || (echo "ERROR: scenes/ not found" && exit 1)
+          test -d assets || (echo "ERROR: assets/ not found" && exit 1)
+          echo "Project structure valid."
+
+      - name: Check version consistency
+        run: |
+          GODOT_VER=$(grep 'config/version=' project.godot | cut -d'"' -f2)
+          GAME_VER=$(grep 'GAME_VERSION' autoload/game_manager.gd | head -1 | cut -d'"' -f2)
+          echo "project.godot version: $GODOT_VER"
+          echo "game_manager.gd version: $GAME_VER"
+          if [ "$GODOT_VER" != "$GAME_VER" ]; then
+            echo "ERROR: Version mismatch!"
+            exit 1
+          fi
+          echo "Versions match."

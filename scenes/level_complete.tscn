@@ -1,0 +1,90 @@
+[gd_scene load_steps=2 format=3 uid="uid://levelcomplete_ss"]
+
+[ext_resource type="Script" path="res://scripts/level_complete.gd" id="1_complete"]
+
+[node name="LevelComplete" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_complete")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.12, 0.22, 0.18, 1)
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -175.0
+offset_top = -200.0
+offset_right = 175.0
+offset_bottom = 200.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="LevelNameLabel" type="Label" parent="Panel/VBoxContainer"]
+theme_override_colors/font_color = Color(0.35, 1, 0.55, 1)
+theme_override_font_sizes/font_size = 22
+text = "🛣️ Level Complete!"
+horizontal_alignment = 1
+
+[node name="StarsLabel" type="Label" parent="Panel/VBoxContainer"]
+theme_override_font_sizes/font_size = 36
+text = "⭐⭐⭐"
+horizontal_alignment = 1
+
+[node name="CoinsLabel" type="Label" parent="Panel/VBoxContainer"]
+theme_override_colors/font_color = Color(1, 0.85, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "Coins: +0"
+horizontal_alignment = 1
+
+[node name="TotalCoinsLabel" type="Label" parent="Panel/VBoxContainer"]
+theme_override_font_sizes/font_size = 16
+text = "Total:  0"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="ReplayButton" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(90, 42)
+text = "REPLAY"
+
+[node name="NextButton" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(90, 42)
+text = "NEXT"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="ShopButton" type="Button" parent="Panel/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(90, 38)
+text = "SHOP"
+
+[node name="MenuButton" type="Button" parent="Panel/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(90, 38)
+text = "LEVELS"
+
+[connection signal="pressed" from="Panel/VBoxContainer/HBoxContainer/ReplayButton" to="." method="_on_replay_button_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/HBoxContainer2/ShopButton" to="." method="_on_shop_button_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/HBoxContainer2/MenuButton" to="." method="_on_menu_button_pressed"]

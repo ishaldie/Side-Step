@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/gut/gut.gd" id="1"]
+
+[node name="Gut" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+_directory1 = "res://test/unit"
+_directory2 = "res://test/integration"
+_include_subdirectories = true
+_prefix = "test_"
+_suffix = ".gd"
+_should_exit = false
+_should_exit_on_success = false
+_log_level = 1
+_ignore_pause_before_teardown = true

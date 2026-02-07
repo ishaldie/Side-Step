@@ -1,0 +1,92 @@
+[gd_scene load_steps=2 format=3 uid="uid://victory_ss"]
+
+[ext_resource type="Script" path="res://scripts/victory.gd" id="1_victory"]
+
+[node name="Victory" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_victory")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.22, 0.18, 0.35, 1)
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -175.0
+offset_top = -210.0
+offset_right = 175.0
+offset_bottom = 210.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Panel/VBoxContainer"]
+theme_override_colors/font_color = Color(1, 0.85, 0, 1)
+theme_override_font_sizes/font_size = 34
+text = "🏆 VICTORY! 🏆"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="Panel/VBoxContainer"]
+theme_override_colors/font_color = Color(0.8, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "You beat all 25 levels!"
+horizontal_alignment = 1
+
+[node name="TotalCoinsLabel" type="Label" parent="Panel/VBoxContainer"]
+theme_override_font_sizes/font_size = 22
+text = "Total Coins: 0"
+horizontal_alignment = 1
+
+[node name="LevelsLabel" type="Label" parent="Panel/VBoxContainer"]
+theme_override_font_sizes/font_size = 17
+text = "Levels: 25 / 25"
+horizontal_alignment = 1
+
+[node name="ShoesLabel" type="Label" parent="Panel/VBoxContainer"]
+theme_override_font_sizes/font_size = 17
+text = "Shoes: 4 / 4"
+horizontal_alignment = 1
+
+[node name="BonusLabel" type="Label" parent="Panel/VBoxContainer"]
+visible = false
+theme_override_colors/font_color = Color(1, 0.85, 0, 1)
+theme_override_font_sizes/font_size = 18
+text = "🏆 100% COMPLETE! 🏆"
+horizontal_alignment = 1
+
+[node name="PlayAgainButton" type="Button" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 45)
+text = "PLAY AGAIN"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="ShopButton" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 40)
+text = "SHOP"
+
+[node name="MenuButton" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 40)
+text = "MENU"
+
+[connection signal="pressed" from="Panel/VBoxContainer/PlayAgainButton" to="." method="_on_play_again_button_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/HBoxContainer/ShopButton" to="." method="_on_shop_button_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/HBoxContainer/MenuButton" to="." method="_on_menu_button_pressed"]

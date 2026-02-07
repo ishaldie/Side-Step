@@ -1,0 +1,87 @@
+[gd_scene load_steps=2 format=3 uid="uid://shop_ss"]
+
+[ext_resource type="Script" path="res://scripts/shop.gd" id="1_shop"]
+
+[node name="Shop" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_shop")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.12, 0.14, 0.2, 1)
+
+[node name="TitleLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_top = 15.0
+offset_right = 90.0
+offset_bottom = 48.0
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 28
+text = "SHOE SHOP"
+horizontal_alignment = 1
+
+[node name="CoinsLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -95.0
+offset_top = 18.0
+offset_right = -15.0
+offset_bottom = 42.0
+theme_override_colors/font_color = Color(1, 0.85, 0, 1)
+theme_override_font_sizes/font_size = 18
+text = " 0"
+horizontal_alignment = 2
+
+[node name="CurrentShoeLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -130.0
+offset_top = 52.0
+offset_right = 130.0
+offset_bottom = 72.0
+theme_override_font_sizes/font_size = 14
+text = "Equipped: 🦶 Barefoot"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -215.0
+offset_top = 85.0
+offset_right = 215.0
+offset_bottom = 720.0
+
+[node name="ShoesContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -65.0
+offset_top = -60.0
+offset_right = 65.0
+offset_bottom = -18.0
+text = "BACK"
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

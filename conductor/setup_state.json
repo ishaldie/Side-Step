@@ -1,0 +1,9 @@
+{
+  "project": "Sidestep",
+  "type": "brownfield",
+  "initialized": true,
+  "last_successful_step": "3.3_initial_track_generated",
+  "created_at": "2026-02-07",
+  "tech_stack": "Godot 4.5.1 / GDScript",
+  "version": "2.7.7"
+}

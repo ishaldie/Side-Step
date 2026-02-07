@@ -1,0 +1,61 @@
+================================================================================
+SIDE STEP v2.6.0 - CHANGELOG
+================================================================================
+
+Release Date: January 29, 2026
+
+NEW FEATURES
+-------------
+- Custom sprite assets replace procedural graphics
+- New background images for all 5 worlds
+- New app icon (1024x1024)
+
+VISUAL UPDATES
+--------------
+UI Sprites:
+  - New coin icon with "S" emblem
+  - New filled/empty star icons
+  - New pause and settings icons
+
+World Icons (World Select):
+  - Road: City street scene
+  - Soccer: Stadium field
+  - Beach: Tropical beach with palm tree
+  - Underwater: Coral reef with treasure
+  - Volcano: Erupting volcano
+
+Shop Shoe Icons:
+  - Barefoot
+  - Flip Flops
+  - Running Shoes
+  - Winged Shoes
+
+Background Images:
+  - City.png for Road world
+  - Soccer_field.png for Soccer world
+  - Underwater.png for Underwater world
+  - Volcano.png for Volcano world
+  - Grasslands.png fallback
+
+Obstacle Sprites (20 new sprites):
+  Road: cone, pothole, manhole, barrier
+  Soccer: soccer_ball, goal_post, training_cone
+  Beach: beach_ball, sand_castle, crab, surfboard
+  Underwater: jellyfish, shark_fin, anchor, coral
+  Volcano: meteor, lava_geyser, obsidian_spike, fire_bat
+
+CODE IMPROVEMENTS
+-----------------
+- UIUtils autoload for shared UI helper functions
+- BackgroundGenerator extracted from game.gd (~500 lines)
+- Custom sprite priority system for obstacles
+- Removed redundant tiled ground layer
+- Improved code organization
+
+TECHNICAL
+---------
+- Godot 4.5.1 compatible
+- All sprites properly cropped with transparent backgrounds
+- Assets organized in assets/sprites/ folder structure
+
+================================================================================

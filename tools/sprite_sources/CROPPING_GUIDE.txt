@@ -1,0 +1,162 @@
+================================================================================
+                         SPRITE CROPPING GUIDE
+================================================================================
+
+QUICK STEPS FOR EACH SPRITE:
+1. Open source image in Photoshop
+2. Rectangular Marquee Tool (M) - select around the sprite
+3. Ctrl+Shift+C (Copy Merged)
+4. Ctrl+N (New - auto-sizes) → Enter
+5. Ctrl+V (Paste)
+6. Magic Wand (W) → click checkered background → Delete
+7. Image → Trim → Transparent Pixels
+8. File → Export → Quick Export as PNG
+9. Save to the folder listed below with the exact filename
+
+================================================================================
+FILE 01: 01_UI_ICONS.png
+SAVE TO: assets/sprites/ui/
+================================================================================
+
+Position (L→R) | Save As          | Description
+---------------|------------------|---------------------------
+1st (skip)     | (don't save)     | Soccer ball reference
+2nd            | coin.png         | Gold coin with S
+3rd            | star_filled.png  | Yellow/gold star
+4th            | star_empty.png   | Gray outline star
+5th            | pause.png        | Two vertical bars
+6th            | settings.png     | Gear/cog icon
+
+================================================================================
+FILE 02: 02_SHOES.png
+SAVE TO: assets/sprites/shoes/
+================================================================================
+
+Position (L→R) | Save As              | Description
+---------------|----------------------|---------------------------
+1st            | barefoot.png         | Tan bare foot
+2nd            | flip_flops.png       | Yellow flip flops
+3rd            | running_shoes.png    | Blue running shoes
+4th            | winged_shoes.png     | Blue shoes with wings
+
+================================================================================
+FILE 03: 03_WORLDS.png
+SAVE TO: assets/sprites/worlds/
+================================================================================
+
+Position (L→R) | Save As               | Description
+---------------|-----------------------|---------------------------
+1st            | world_meadow.png      | Green meadow (extra)
+2nd            | world_road.png        | City street
+3rd            | world_soccer.png      | Soccer field
+4th            | world_underwater.png  | Coral reef
+5th            | world_volcano.png     | Erupting volcano
+
+================================================================================
+FILE 04: 04_WORLD_BEACH.png (SINGLE IMAGE)
+SAVE TO: assets/sprites/worlds/
+================================================================================
+
+Just one sprite | Save As           | Description
+----------------|-------------------|---------------------------
+Whole image     | world_beach.png   | Beach with palm tree
+
+================================================================================
+FILE 05: 05_ROAD_OBSTACLES_1.png
+SAVE TO: assets/sprites/obstacles/road/
+================================================================================
+
+Position (L→R) | Save As          | Description
+---------------|------------------|---------------------------
+1st            | cone.png         | Orange traffic cone
+2nd            | pothole.png      | Cracked road hole
+3rd            | manhole.png      | Metal manhole cover
+4th            | barrier.png      | Orange/white sawhorse
+
+================================================================================
+FILE 06: 06_ROAD_OBSTACLES_2.png
+SAVE TO: assets/sprites/obstacles/road/
+================================================================================
+
+Position (L→R) | Save As           | Description
+---------------|-------------------|---------------------------
+1st            | spikes.png        | Metal spikes
+2nd            | crate.png         | Wooden crate
+3rd            | pillar.png        | Stone pillar
+4th            | warning_sign.png  | Yellow warning sign
+
+================================================================================
+FILE 07: 07_SOCCER_OBSTACLES.png
+SAVE TO: assets/sprites/obstacles/soccer/
+================================================================================
+
+Position (L→R) | Save As            | Description
+---------------|--------------------|--------------------------
+1st            | soccer_ball.png    | Black/white soccer ball
+2nd            | training_cone.png  | Orange training cone
+3rd            | tackle_dummy.png   | Red tackle dummy
+4th            | goal_post.png      | Goal with net
+
+================================================================================
+FILE 08: 08_BEACH_OBSTACLES.png
+SAVE TO: assets/sprites/obstacles/beach/
+================================================================================
+
+Position (L→R) | Save As          | Description
+---------------|------------------|---------------------------
+1st            | beach_ball.png   | Colorful beach ball
+2nd            | sand_castle.png  | Sand castle with flag
+3rd            | crab.png         | Red cartoon crab
+4th            | surfboard.png    | Rainbow surfboard
+
+================================================================================
+FILE 09: 09_UNDERWATER_OBSTACLES.png
+SAVE TO: assets/sprites/obstacles/underwater/
+================================================================================
+
+Position (L→R) | Save As          | Description
+---------------|------------------|---------------------------
+1st            | jellyfish.png    | Pink jellyfish
+2nd            | shark_fin.png    | Gray shark fin
+3rd            | anchor.png       | Metal anchor
+4th            | coral.png        | Colorful coral
+
+================================================================================
+FILE 10: 10_VOLCANO_OBSTACLES.png
+SAVE TO: assets/sprites/obstacles/volcano/
+================================================================================
+
+Position (L→R) | Save As            | Description
+---------------|--------------------|--------------------------
+1st            | meteor.png         | Flaming meteor
+2nd            | lava_geyser.png    | Lava erupting
+3rd            | obsidian_spike.png | Black crystal spike
+4th            | fire_bat.png       | Orange bat with flames
+
+================================================================================
+FILE 11: 11_POWERUPS.png
+SAVE TO: assets/sprites/powerups/
+================================================================================
+
+Position (L→R) | Save As          | Description
+---------------|------------------|---------------------------
+1st            | shield.png       | Blue shield orb
+2nd            | magnet.png       | Red/silver magnet
+3rd            | speed_bolt.png   | Yellow lightning bolt
+
+================================================================================
+                              TOTAL: 39 SPRITES
+================================================================================
+
+OUTPUT FOLDERS (already created):
+- assets/sprites/ui/           (5 sprites)
+- assets/sprites/shoes/        (4 sprites)
+- assets/sprites/worlds/       (6 sprites)
+- assets/sprites/obstacles/road/       (8 sprites)
+- assets/sprites/obstacles/soccer/     (4 sprites)
+- assets/sprites/obstacles/beach/      (4 sprites)
+- assets/sprites/obstacles/underwater/ (4 sprites)
+- assets/sprites/obstacles/volcano/    (4 sprites)
+- assets/sprites/powerups/     (3 sprites)
+
+================================================================================

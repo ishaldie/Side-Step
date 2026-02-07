@@ -1,0 +1,132 @@
+[gd_scene load_steps=2 format=3 uid="uid://settings_ss"]
+
+[ext_resource type="Script" path="res://scripts/settings.gd" id="1_settings"]
+
+[node name="Settings" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_settings")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.12, 0.14, 0.2, 1)
+
+[node name="TitleLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_top = 30.0
+offset_right = 90.0
+offset_bottom = 70.0
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 32
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -180.0
+offset_right = 200.0
+offset_bottom = 180.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+theme_override_constants/separation = 25
+
+[node name="AudioLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Audio"
+
+[node name="MusicContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="MusicLabel" type="Label" parent="Panel/VBoxContainer/MusicContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Music"
+
+[node name="MusicToggle" type="CheckButton" parent="Panel/VBoxContainer/MusicContainer"]
+layout_mode = 2
+button_pressed = true
+
+[node name="MusicSlider" type="HSlider" parent="Panel/VBoxContainer/MusicContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+value = 70.0
+
+[node name="MusicValue" type="Label" parent="Panel/VBoxContainer/MusicContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "70%"
+horizontal_alignment = 2
+
+[node name="SFXContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="SFXLabel" type="Label" parent="Panel/VBoxContainer/SFXContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "SFX"
+
+[node name="SFXToggle" type="CheckButton" parent="Panel/VBoxContainer/SFXContainer"]
+layout_mode = 2
+button_pressed = true
+
+[node name="SFXSlider" type="HSlider" parent="Panel/VBoxContainer/SFXContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+value = 100.0
+
+[node name="SFXValue" type="Label" parent="Panel/VBoxContainer/SFXContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "100%"
+horizontal_alignment = 2
+
+[node name="Separator" type="HSeparator" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ResetButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Reset to Defaults"
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -65.0
+offset_top = -70.0
+offset_right = 65.0
+offset_bottom = -25.0
+text = "BACK"
+
+[connection signal="pressed" from="Panel/VBoxContainer/ResetButton" to="." method="_on_reset_settings_pressed"]
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
