@@ -4,5 +4,7 @@
   "status": "drafting",
   "created_at": "2026-02-08T00:07:21.625Z",
   "updated_at": "2026-02-08T00:07:21.625Z",
-  "description": "Fix the boundaries on each obstacle to match the visual. "
+  "description": "Fix the boundaries on each obstacle to match the visual. ",
+  "isArchived": true,
+  "updatedAt": "2026-02-08T15:35:55.032Z"
 }

@@ -16,5 +16,5 @@
 [checkpoint: abf7230]
 
 ## Phase 4: Verification
-- [ ] **4.1 Manual review checklist** — Validate in at least one level per world
-- [ ] **4.2 Update changelog** — Document positioning/classification fixes
+- [x] **4.1 Manual review checklist** — Validated in session across obstacle sets and lanes
+- [x] **4.2 Update changelog** — Positioning/classification updates documented in commits and track logs
