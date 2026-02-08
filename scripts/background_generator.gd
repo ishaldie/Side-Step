@@ -9,8 +9,6 @@ extends RefCounted
 # =============================================================================
 
 const CIRCLE_SEGMENTS: int = 16
-const SCREEN_WIDTH: float = 480.0
-const SCREEN_HEIGHT: float = 800.0
 
 const BACKGROUND_IMAGES: Array[String] = [
 	"res://assets/backgrounds/city.png",        # World 0: Road
@@ -20,22 +18,11 @@ const BACKGROUND_IMAGES: Array[String] = [
 	"res://assets/backgrounds/volcano.png"       # World 4: Volcano
 ]
 
-# Per-world parallax scroll speed ratios (fraction of obstacle speed)
-const PARALLAX_CONFIGS: Array[Dictionary] = [
-	{ "far_speed_ratio": 0.1, "near_speed_ratio": 0.3 },  # World 0: Road
-	{ "far_speed_ratio": 0.08, "near_speed_ratio": 0.25 }, # World 1: Soccer
-	{ "far_speed_ratio": 0.12, "near_speed_ratio": 0.35 }, # World 2: Beach
-	{ "far_speed_ratio": 0.06, "near_speed_ratio": 0.2 },  # World 3: Underwater
-	{ "far_speed_ratio": 0.1, "near_speed_ratio": 0.3 },   # World 4: Volcano
-]
-
 # =============================================================================
 # PRIVATE STATE
 # =============================================================================
 
 var _parent: Node2D
-var _parallax_bg: ParallaxBackground = null
-var _world_index: int = 0
 
 # =============================================================================
 # PUBLIC API
@@ -47,16 +34,24 @@ func _init(parent: Node2D) -> void:
 
 ## Creates background decorations for the specified world.
 func create_background(world_index: int, world_data: Dictionary) -> void:
-	_world_index = world_index
-
-	# Try to load background image with parallax
+	# Try to load background image first
 	if world_index < BACKGROUND_IMAGES.size() and ResourceLoader.exists(BACKGROUND_IMAGES[world_index]):
 		var bg_texture: Texture2D = load(BACKGROUND_IMAGES[world_index])
 		if bg_texture:
-			_create_parallax_background(bg_texture, world_index)
-			return  # Use parallax background, skip procedural
+			var bg_sprite := Sprite2D.new()
+			bg_sprite.texture = bg_texture
+			bg_sprite.z_index = -100
+			# Center the background and scale to fit screen
+			bg_sprite.position = Vector2(240, 400)  # Center of 480x800 screen
+			# Scale to cover the screen
+			var scale_x: float = 480.0 / bg_texture.get_width()
+			var scale_y: float = 800.0 / bg_texture.get_height()
+			var scale_factor: float = max(scale_x, scale_y)
+			bg_sprite.scale = Vector2(scale_factor, scale_factor)
+			_parent.add_child(bg_sprite)
+			return  # Use image background, skip procedural
 
-	# Fallback to procedural backgrounds (no parallax)
+	# Fallback to procedural backgrounds
 	_create_sky_gradient(world_data)
 
 	match world_index:
@@ -65,78 +60,6 @@ func create_background(world_index: int, world_data: Dictionary) -> void:
 		2: _create_beach_background()
 		3: _create_underwater_background()
 		4: _create_volcano_background()
-
-
-## Updates parallax scroll offset. Call from game._process().
-func update_parallax_scroll(obstacle_speed: float, delta: float) -> void:
-	if _parallax_bg:
-		_parallax_bg.scroll_offset.x -= obstacle_speed * delta
-
-
-## Creates a ParallaxBackground with far and near tiling layers.
-func _create_parallax_background(texture: Texture2D, world_index: int) -> void:
-	_parallax_bg = ParallaxBackground.new()
-	_parallax_bg.name = "ParallaxBG"
-	_parallax_bg.scroll_base_offset = Vector2.ZERO
-
-	# Calculate scale to cover screen height
-	var scale_x: float = SCREEN_WIDTH / texture.get_width()
-	var scale_y: float = SCREEN_HEIGHT / texture.get_height()
-	var scale_factor: float = max(scale_x, scale_y)
-
-	# Get config
-	var config: Dictionary = PARALLAX_CONFIGS[world_index] if world_index < PARALLAX_CONFIGS.size() else PARALLAX_CONFIGS[0]
-
-	# Far layer — background image, slow scroll
-	var far_layer := ParallaxLayer.new()
-	far_layer.name = "FarLayer"
-	far_layer.motion_scale = Vector2(config.far_speed_ratio, 0.0)
-	# Tile horizontally so scrolling never reveals empty space
-	var tile_width: float = texture.get_width() * scale_factor
-	far_layer.motion_mirroring = Vector2(tile_width, 0)
-
-	var far_sprite := Sprite2D.new()
-	far_sprite.texture = texture
-	far_sprite.scale = Vector2(scale_factor, scale_factor)
-	far_sprite.position = Vector2(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0)
-	far_sprite.z_index = -100
-	far_layer.add_child(far_sprite)
-
-	# Duplicate sprite for seamless tiling
-	var far_sprite2 := Sprite2D.new()
-	far_sprite2.texture = texture
-	far_sprite2.scale = Vector2(scale_factor, scale_factor)
-	far_sprite2.position = Vector2(SCREEN_WIDTH / 2.0 + tile_width, SCREEN_HEIGHT / 2.0)
-	far_sprite2.z_index = -100
-	far_layer.add_child(far_sprite2)
-
-	_parallax_bg.add_child(far_layer)
-
-	# Near layer — slight color overlay for depth, faster scroll
-	var near_layer := ParallaxLayer.new()
-	near_layer.name = "NearLayer"
-	near_layer.motion_scale = Vector2(config.near_speed_ratio, 0.0)
-	near_layer.motion_mirroring = Vector2(tile_width, 0)
-
-	var near_sprite := Sprite2D.new()
-	near_sprite.texture = texture
-	near_sprite.scale = Vector2(scale_factor, scale_factor)
-	near_sprite.position = Vector2(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0)
-	near_sprite.z_index = -99
-	near_sprite.modulate = Color(1, 1, 1, 0.3)  # Semi-transparent overlay
-	near_layer.add_child(near_sprite)
-
-	var near_sprite2 := Sprite2D.new()
-	near_sprite2.texture = texture
-	near_sprite2.scale = Vector2(scale_factor, scale_factor)
-	near_sprite2.position = Vector2(SCREEN_WIDTH / 2.0 + tile_width, SCREEN_HEIGHT / 2.0)
-	near_sprite2.z_index = -99
-	near_sprite2.modulate = Color(1, 1, 1, 0.3)
-	near_layer.add_child(near_sprite2)
-
-	_parallax_bg.add_child(near_layer)
-
-	_parent.add_child(_parallax_bg)
 
 
 ## Creates tiled ground sprites for the specified world.
