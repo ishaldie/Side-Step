@@ -8,6 +8,8 @@ extends Node2D
 
 const SPAWN_X: float = 550.0
 const POSITIONING_CONFIG = preload("res://scripts/positioning_config.gd")
+const BACKGROUND_GENERATOR_SCRIPT = preload("res://scripts/background_generator.gd")
+const POWERUP_SCRIPT = preload("res://scripts/powerup.gd")
 const GROUND_LEVEL_Y: float = POSITIONING_CONFIG.GROUND_Y  # Visual ground top (matches player GROUND_Y for feet alignment)
 const DUCK_OBSTACLE_Y: float = POSITIONING_CONFIG.DUCK_OBSTACLE_Y  # Consistent height for duck-under obstacles
 const DUCK_OBSTACLE_CLEAR_BOTTOM_Y: float = POSITIONING_CONFIG.DUCK_OBSTACLE_CLEAR_BOTTOM_Y
@@ -78,7 +80,7 @@ var _guaranteed_coins_spawned: int = 0  # Track coins for minimum guarantee
 var _obstacle_configs: Dictionary
 
 # Background generator instance
-var _bg_generator: BackgroundGenerator
+var _bg_generator: RefCounted
 
 # Powerup state
 var _active_powerup_type: int = -1  # -1 = none
@@ -159,17 +161,21 @@ func _process(delta: float) -> void:
 
 func _setup_visuals() -> void:
 	# Initialize background generator
-	_bg_generator = BackgroundGenerator.new(self)
-
-	# Hide the old solid color backgrounds (replaced by background images)
-	_background.visible = false
-	_ground_rect.visible = false
+	_bg_generator = BACKGROUND_GENERATOR_SCRIPT.new(self)
 	_world_label.text = "%s %s" % [_world_data.icon, _world_data.name]
 	_level_label.text = _level_data.name
-	_difficulty_label.text = "⚡ %s" % _level_data.difficulty
+	_difficulty_label.text = "Difficulty %s" % _level_data.difficulty
 
 	# Create themed background using the generator
-	_bg_generator.create_background(GameManager.current_world_index, _world_data)
+	var background_created: bool = false
+	if _bg_generator and _bg_generator.has_method("create_background"):
+		background_created = _bg_generator.create_background(GameManager.current_world_index, _world_data)
+
+	# Keep fallback ColorRects visible unless background generation succeeded.
+	_background.visible = not background_created
+	_ground_rect.visible = not background_created
+	if not background_created:
+		push_warning("[Game] Background generation failed; using fallback background/ground")
 
 	# Create powerup HUD label (hidden until a powerup is active)
 	_powerup_hud_label = Label.new()
@@ -452,7 +458,7 @@ func _spawn_powerup() -> void:
 	if not _powerup_scene:
 		return
 	var powerup = _powerup_scene.instantiate()
-	var type_val: int = randi() % Powerup.Type.size()
+	var type_val: int = randi() % POWERUP_SCRIPT.Type.size()
 	var y_pos: float = randf_range(400.0, 600.0)
 	powerup.position = Vector2(SPAWN_X, y_pos)
 	powerup.setup(type_val, _level_data.obstacle_speed, y_pos)
@@ -468,7 +474,7 @@ func _activate_powerup(powerup_type: int) -> void:
 	if _active_powerup_type != -1:
 		_expire_powerup()
 
-	var config: Dictionary = Powerup.CONFIGS.get(powerup_type, {})
+	var config: Dictionary = POWERUP_SCRIPT.CONFIGS.get(powerup_type, {})
 	if config.is_empty():
 		return
 
@@ -477,13 +483,13 @@ func _activate_powerup(powerup_type: int) -> void:
 	EventBus.powerup_activated.emit(powerup_type, config.duration)
 
 	match powerup_type:
-		Powerup.Type.SHIELD:
+		POWERUP_SCRIPT.Type.SHIELD:
 			_player.invincible = true
 			_player.invincible_timer = config.duration
-		Powerup.Type.SPEED_BOOST:
+		POWERUP_SCRIPT.Type.SPEED_BOOST:
 			_original_move_speed = _player.move_speed
 			_player.move_speed *= config.get("speed_multiplier", 1.5)
-		Powerup.Type.MAGNET:
+		POWERUP_SCRIPT.Type.MAGNET:
 			pass  # Handled in _update_powerup_timer via coin attraction
 
 
@@ -494,8 +500,8 @@ func _update_powerup_timer(delta: float) -> void:
 	_powerup_timer -= delta
 
 	# Magnet effect: attract nearby coins each frame
-	if _active_powerup_type == Powerup.Type.MAGNET:
-		var config = Powerup.CONFIGS[Powerup.Type.MAGNET]
+	if _active_powerup_type == POWERUP_SCRIPT.Type.MAGNET:
+		var config = POWERUP_SCRIPT.CONFIGS[POWERUP_SCRIPT.Type.MAGNET]
 		var radius: float = config.get("magnet_radius", 150.0)
 		for coin in _coin_container.get_children():
 			if coin is Area2D and coin.has_method("reset"):
@@ -510,14 +516,14 @@ func _update_powerup_timer(delta: float) -> void:
 
 func _expire_powerup() -> void:
 	match _active_powerup_type:
-		Powerup.Type.SHIELD:
+		POWERUP_SCRIPT.Type.SHIELD:
 			_player.invincible = false
 			_player.invincible_timer = 0.0
-		Powerup.Type.SPEED_BOOST:
+		POWERUP_SCRIPT.Type.SPEED_BOOST:
 			if _original_move_speed > 0.0:
 				_player.move_speed = _original_move_speed
 				_original_move_speed = 0.0
-		Powerup.Type.MAGNET:
+		POWERUP_SCRIPT.Type.MAGNET:
 			pass
 
 	EventBus.powerup_expired.emit(_active_powerup_type)
@@ -550,7 +556,7 @@ func _update_ui() -> void:
 	# Powerup HUD
 	if _powerup_hud_label:
 		if _active_powerup_type != -1:
-			var type_name: String = Powerup.Type.keys()[_active_powerup_type]
+			var type_name: String = POWERUP_SCRIPT.Type.keys()[_active_powerup_type]
 			_powerup_hud_label.text = "%s %.1fs" % [type_name, _powerup_timer]
 			_powerup_hud_label.visible = true
 		else:
@@ -637,3 +643,4 @@ func _update_settings_buttons() -> void:
 	else:
 		sfx_btn.text = "Sounds: OFF"
 		sfx_btn.button_pressed = true
+

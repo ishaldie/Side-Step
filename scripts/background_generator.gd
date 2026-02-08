@@ -33,10 +33,17 @@ func _init(parent: Node2D) -> void:
 
 
 ## Creates background decorations for the specified world.
-func create_background(world_index: int, world_data: Dictionary) -> void:
+func create_background(world_index: int, world_data: Dictionary) -> bool:
+	var initial_child_count: int = _parent.get_child_count()
 	# Try to load background image first
 	if world_index < BACKGROUND_IMAGES.size() and ResourceLoader.exists(BACKGROUND_IMAGES[world_index]):
-		var bg_texture: Texture2D = load(BACKGROUND_IMAGES[world_index])
+		var bg_image := Image.new()
+		var load_err: int = bg_image.load(BACKGROUND_IMAGES[world_index])
+		var bg_texture: Texture2D = null
+		if load_err == OK:
+			bg_texture = ImageTexture.create_from_image(bg_image)
+		else:
+			bg_texture = load(BACKGROUND_IMAGES[world_index])
 		if bg_texture:
 			var bg_sprite := Sprite2D.new()
 			bg_sprite.texture = bg_texture
@@ -49,7 +56,7 @@ func create_background(world_index: int, world_data: Dictionary) -> void:
 			var scale_factor: float = max(scale_x, scale_y)
 			bg_sprite.scale = Vector2(scale_factor, scale_factor)
 			_parent.add_child(bg_sprite)
-			return  # Use image background, skip procedural
+			return true  # Use image background, skip procedural
 
 	# Fallback to procedural backgrounds
 	_create_sky_gradient(world_data)
@@ -60,6 +67,8 @@ func create_background(world_index: int, world_data: Dictionary) -> void:
 		2: _create_beach_background()
 		3: _create_underwater_background()
 		4: _create_volcano_background()
+
+	return _parent.get_child_count() > initial_child_count
 
 
 ## Creates tiled ground sprites for the specified world.
