@@ -33,7 +33,8 @@ const TIPS: Array[String] = [
 func _ready() -> void:
 	var distance_meters: int = int(GameManager.distance / 100.0)
 	_score_label.text = "Distance: %dm" % distance_meters
-	_coins_label.text = "Coins: +%d (half on death)" % (GameManager.coins / 2)
+	var kept_coins: int = int(GameManager.coins * GameManager.DEATH_COIN_PENALTY)
+	_coins_label.text = "Coins: +%d (%d%% on death)" % [kept_coins, int(GameManager.DEATH_COIN_PENALTY * 100)]
 	_tip_label.text = TIPS[randi() % TIPS.size()]
 	
 	var world_data: Dictionary = GameManager.get_current_world_data()

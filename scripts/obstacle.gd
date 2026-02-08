@@ -202,6 +202,7 @@ var _can_shoot: bool = false
 # Projectile state (for bananas)
 var _is_projectile: bool = false
 var _velocity: Vector2 = Vector2.ZERO
+var _visual_center_offset: Vector2 = Vector2.ZERO
 
 # =============================================================================
 # NODE REFERENCES
@@ -265,6 +266,7 @@ func reset() -> void:
 	_can_shoot = false
 	_is_projectile = false
 	_velocity = Vector2.ZERO
+	_visual_center_offset = Vector2.ZERO
 	# Reset cached behavior flags
 	_behav_flying = false
 	_behav_moves = false
@@ -287,39 +289,7 @@ func reset() -> void:
 
 
 # =============================================================================
-# CUSTOM SPRITE MAPPING (Priority over Kenney)
-# =============================================================================
-
-const CUSTOM_SPRITE_MAP: Dictionary = {
-	# World 1: Road
-	"cone": "res://assets/sprites/obstacles/road/cone.png",
-	"pothole": "res://assets/sprites/obstacles/road/pothole.png",
-	"barrier": "res://assets/sprites/obstacles/road/barrier.png",
-	"manhole": "res://assets/sprites/obstacles/road/manhole.png",
-	# World 2: Soccer
-	"soccer_ball": "res://assets/sprites/obstacles/soccer/soccer_ball.png",
-	"flying_ball": "res://assets/sprites/obstacles/soccer/soccer_ball.png",
-	"goal_post": "res://assets/sprites/obstacles/soccer/goal_post.png",
-	"corner_flag": "res://assets/sprites/obstacles/soccer/training_cone.png",
-	# World 3: Beach
-	"beach_ball": "res://assets/sprites/obstacles/beach/beach_ball.png",
-	"sandcastle": "res://assets/sprites/obstacles/beach/sand_castle.png",
-	"crab": "res://assets/sprites/obstacles/beach/crab.png",
-	"surfboard": "res://assets/sprites/obstacles/beach/surfboard.png",
-	# World 4: Underwater
-	"jellyfish": "res://assets/sprites/obstacles/underwater/jellyfish.png",
-	"anchor": "res://assets/sprites/obstacles/underwater/anchor.png",
-	"coral": "res://assets/sprites/obstacles/underwater/coral.png",
-	"shark": "res://assets/sprites/obstacles/underwater/shark_fin.png",
-	# World 5: Volcano
-	"meteor": "res://assets/sprites/obstacles/volcano/meteor.png",
-	"fire_geyser": "res://assets/sprites/obstacles/volcano/lava_geyser.png",
-	"lava_bubble": "res://assets/sprites/obstacles/volcano/lava_geyser.png",
-	"falling_stalactite": "res://assets/sprites/obstacles/volcano/obsidian_spike.png",
-}
-
-# =============================================================================
-# KENNEY SPRITE MAPPING (Fallback)
+# KENNEY SPRITE MAPPING (Fallback for obstacles without custom pixel art)
 # =============================================================================
 
 const SPRITE_MAP: Dictionary = {
@@ -400,6 +370,7 @@ const PRELOADED_CUSTOM: Dictionary = {
 	"manhole": preload("res://assets/sprites/obstacles/road/manhole.png"),
 	# World 2: Soccer
 	"soccer_ball": preload("res://assets/sprites/obstacles/soccer/soccer_ball.png"),
+	"flying_ball": preload("res://assets/sprites/obstacles/soccer/soccer_ball.png"),
 	"goal_post": preload("res://assets/sprites/obstacles/soccer/goal_post.png"),
 	"corner_flag": preload("res://assets/sprites/obstacles/soccer/training_cone.png"),
 	# World 3: Beach
@@ -415,6 +386,7 @@ const PRELOADED_CUSTOM: Dictionary = {
 	# World 5: Volcano
 	"meteor": preload("res://assets/sprites/obstacles/volcano/meteor.png"),
 	"fire_geyser": preload("res://assets/sprites/obstacles/volcano/lava_geyser.png"),
+	"lava_bubble": preload("res://assets/sprites/obstacles/volcano/lava_geyser.png"),
 	"falling_stalactite": preload("res://assets/sprites/obstacles/volcano/obsidian_spike.png"),
 }
 
@@ -461,12 +433,8 @@ const PRELOADED_KENNEY: Dictionary = {
 # Runtime texture cache for textures not preloaded
 var _texture_cache: Dictionary = {}
 
-## Gets a texture, using preloaded cache first, then runtime cache
+## Gets a Kenney/fallback texture, using preloaded cache first, then runtime cache
 func _get_texture(path: String) -> Texture2D:
-	# Check preloaded custom sprites by obstacle type
-	if PRELOADED_CUSTOM.has(obstacle_type):
-		return PRELOADED_CUSTOM[obstacle_type]
-
 	# Check preloaded Kenney textures by filename
 	var filename: String = path.get_file().get_basename()
 	if PRELOADED_KENNEY.has(filename):
@@ -488,19 +456,17 @@ func _setup_obstacle() -> void:
 
 	_config = CONFIGS[obstacle_type]
 
-	# Load sprite texture - check custom sprites first, then Kenney fallback
+	# Load sprite texture - check custom pixel art first, then Kenney fallback
 	var sprite_info: Dictionary = {}
-	var texture_path: String = FALLBACK_TEXTURE
 
-	if CUSTOM_SPRITE_MAP.has(obstacle_type):
-		# Use custom sprite (no tint needed - already correct colors)
-		texture_path = CUSTOM_SPRITE_MAP[obstacle_type]
+	if PRELOADED_CUSTOM.has(obstacle_type):
+		# Use custom pixel art sprite directly (no tint needed)
+		_sprite.texture = PRELOADED_CUSTOM[obstacle_type]
 	else:
 		# Fall back to Kenney sprites
 		sprite_info = SPRITE_MAP.get(obstacle_type, {})
-		texture_path = sprite_info.get("texture", FALLBACK_TEXTURE)
-
-	_sprite.texture = _get_texture(texture_path)
+		var texture_path: String = sprite_info.get("texture", FALLBACK_TEXTURE)
+		_sprite.texture = _get_texture(texture_path)
 
 	# Scale texture to a reasonable game size (Kenney tiles are ~128px, we want ~50-80px obstacles)
 	if _sprite.texture:
@@ -524,12 +490,16 @@ func _setup_obstacle() -> void:
 
 	# Derive collision from rendered sprite size (not raw config dimensions)
 	if _sprite.texture:
-		var rendered_size := _sprite.texture.get_size() * _sprite.scale.abs()
-		_setup_collision(rendered_size.x, rendered_size.y)
+		var visual_rect: Rect2 = _get_visual_rect(_sprite.texture)
+		var rendered_visual_size := visual_rect.size * _sprite.scale.abs()
+		_setup_collision(rendered_visual_size.x, rendered_visual_size.y)
+		var texture_center: Vector2 = _sprite.texture.get_size() * 0.5
+		var visual_center: Vector2 = visual_rect.position + (visual_rect.size * 0.5)
+		_visual_center_offset = (visual_center - texture_center) * _sprite.scale
+		_collision.position = _visual_center_offset
 	else:
 		_setup_collision(_config.width, _config.height)
-
-	_align_to_avoidance_lane()
+		_collision.position = Vector2.ZERO
 
 	is_ground_obstacle = _config.ground
 	is_flying = _config.get("flying", false)
@@ -557,14 +527,27 @@ func _setup_obstacle() -> void:
 	# Apply height offset for duck_under obstacles
 	var height_offset: float = _config.get("height_offset", 0.0)
 	if height_offset != 0.0:
-		_sprite.position.y = height_offset
-		_collision.position.y = height_offset
+		_sprite.position.y += height_offset
+		_collision.position.y += height_offset
+
+	_align_to_avoidance_lane()
 
 
 func _setup_collision(width: float, height: float) -> void:
 	var shape := RectangleShape2D.new()
 	shape.size = Vector2(width * COLLISION_SIZE_RATIO, height * COLLISION_SIZE_RATIO)
 	_collision.shape = shape
+
+
+func _get_visual_rect(texture: Texture2D) -> Rect2:
+	if not texture:
+		return Rect2(Vector2.ZERO, Vector2.ZERO)
+	var image: Image = texture.get_image()
+	if image:
+		var used: Rect2i = image.get_used_rect()
+		if used.size.x > 0 and used.size.y > 0:
+			return Rect2(used.position, used.size)
+	return Rect2(Vector2.ZERO, texture.get_size())
 
 
 ## Aligns obstacle center based on rendered collision size and avoidance profile.
@@ -576,11 +559,12 @@ func _align_to_avoidance_lane() -> void:
 	var half_h: float = shape.size.y * 0.5
 	var avoidance: String = _config.get("avoidance", "jump")
 	var is_flying_obstacle: bool = _config.get("flying", false)
+	var collision_bottom_from_node_origin: float = _collision.position.y + half_h
 
 	if avoidance == "duck":
-		position.y = POSITIONING_CONFIG.DUCK_OBSTACLE_CLEAR_BOTTOM_Y - half_h
+		position.y = POSITIONING_CONFIG.DUCK_OBSTACLE_CLEAR_BOTTOM_Y - collision_bottom_from_node_origin
 	elif not is_flying_obstacle:
-		position.y = POSITIONING_CONFIG.GROUND_Y + POSITIONING_CONFIG.GROUND_OBSTACLE_CONTACT_PADDING_Y - half_h
+		position.y = POSITIONING_CONFIG.GROUND_Y + POSITIONING_CONFIG.GROUND_OBSTACLE_CONTACT_PADDING_Y - collision_bottom_from_node_origin
 
 	start_y = position.y
 

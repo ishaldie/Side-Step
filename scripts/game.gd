@@ -311,13 +311,6 @@ func _on_spawn_projectile(projectile_type: String, pos: Vector2, vel: Vector2) -
 	_spawn_projectile(projectile_type, pos, vel)
 
 
-## Checks obstacle config to determine if it's a flying type.
-func _is_flying_obstacle(obs_type: String) -> bool:
-	if _obstacle_configs.has(obs_type):
-		return _obstacle_configs[obs_type].get("flying", false)
-	return false
-
-
 func _spawn_coin_pattern() -> void:
 	var pattern: int = randi() % CoinPattern.size()
 	
@@ -351,9 +344,9 @@ func _spawn_coin(x: float, y: float) -> void:
 	if not coin:
 		push_warning("[Game] Failed to get coin from pool")
 		return
+	coin.reset()
 	coin.position = Vector2(x, y)
 	coin.setup(_level_data.obstacle_speed, y, 1)
-	coin.reset()
 	_coin_container.add_child(coin)
 	
 	# Track for minimum guarantee
@@ -426,7 +419,7 @@ func _on_player_died() -> void:
 		Analytics.log_level_fail(
 			GameManager.current_world_index,
 			GameManager.current_level_index,
-			GameManager.distance,
+			int(GameManager.distance),
 			GameManager.coins
 		)
 	

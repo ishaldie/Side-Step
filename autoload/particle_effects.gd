@@ -76,8 +76,13 @@ func _spawn_effect(pos: Vector2, amount: int, lifetime: float, color: Color,
 	p.global_position = pos
 	p.emitting = true
 
-	# Add to scene tree
-	get_tree().current_scene.add_child(p)
+	# Add to scene tree (guard against null during scene transitions)
+	var scene := get_tree().current_scene
+	if not scene:
+		p.queue_free()
+		return p
+
+	scene.add_child(p)
 
 	# Auto-free after particles finish
 	get_tree().create_timer(lifetime + 0.1).timeout.connect(p.queue_free)

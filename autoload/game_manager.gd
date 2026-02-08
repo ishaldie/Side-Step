@@ -9,8 +9,10 @@ extends Node
 
 const GAME_VERSION: String = "2.8.0"
 
-## TEST MODE - Set to true to unlock all content and reset tutorial for testing
-const TEST_MODE: bool = true
+## TEST MODE - Automatically enabled in editor/debug builds, disabled in release exports.
+## In debug: all content unlocked, tutorial resets each launch.
+## In release: normal progression rules apply.
+var TEST_MODE: bool = OS.is_debug_build()
 
 const WORLDS_COUNT: int = 5
 const LEVELS_PER_WORLD: int = 5
@@ -18,7 +20,10 @@ const TOTAL_LEVELS: int = WORLDS_COUNT * LEVELS_PER_WORLD
 const SAVE_PATH: String = "user://sidestep_save.cfg"
 const SAVE_PATH_ENCRYPTED: String = "user://sidestep_save.enc"
 const SAVE_VERSION: int = 3  # Increment when save format changes (3 = encrypted)
-const SAVE_ENCRYPTION_KEY: String = "SideStep_K4i_2026_$ecure"  # Obfuscated save key
+## Save encryption key - derived at runtime to avoid plaintext in binary.
+## This is anti-cheat, not security-critical. A determined user can still
+## reverse-engineer it, but it won't show up in a simple strings search.
+var SAVE_ENCRYPTION_KEY: String = _derive_save_key()
 const DEATH_COIN_PENALTY: float = 0.5
 
 # Star thresholds (percentage of coins collected)
@@ -551,6 +556,16 @@ func go_to_victory() -> void:
 # =============================================================================
 # SAVE/LOAD
 # =============================================================================
+
+## Derives the save encryption key from split components at runtime.
+## Keeps the key out of plaintext in the exported binary.
+## IMPORTANT: Must produce the same key as previous versions for save compatibility.
+static func _derive_save_key() -> String:
+	var parts: PackedStringArray = [
+		"Side", "Step", "_K4i", "_20", "26_$", "ecure"
+	]
+	return "".join(parts)
+
 
 func save_game() -> void:
 	var config := ConfigFile.new()

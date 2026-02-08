@@ -122,25 +122,25 @@ func log_level_start(world_index: int, level_index: int) -> void:
 
 
 ## Logs when a level is completed.
-func log_level_complete(world_index: int, level_index: int, score: int, coins: int) -> void:
+func log_level_complete(world_index: int, level_index: int, distance: int, coins: int) -> void:
 	_levels_completed += 1
 	_coins_collected += coins
 	log_event(EVENT_LEVEL_COMPLETE, {
 		"world_index": world_index,
 		"level_index": level_index,
-		"score": score,
+		"distance": distance,
 		"coins_earned": coins,
 		"total_levels_completed": _levels_completed
 	})
 
 
 ## Logs when player dies.
-func log_level_fail(world_index: int, level_index: int, score: int, coins: int) -> void:
+func log_level_fail(world_index: int, level_index: int, distance: int, coins: int) -> void:
 	_deaths += 1
 	log_event(EVENT_LEVEL_FAIL, {
 		"world_index": world_index,
 		"level_index": level_index,
-		"score": score,
+		"distance": distance,
 		"coins_earned": coins,
 		"total_deaths": _deaths
 	})
@@ -198,7 +198,7 @@ func _generate_session_id() -> String:
 # =============================================================================
 
 func _on_level_completed(world_index: int, level_index: int) -> void:
-	log_level_complete(world_index, level_index, GameManager.distance, GameManager.coins)
+	log_level_complete(world_index, level_index, int(GameManager.distance), GameManager.coins)
 
 
 func _on_shoe_purchased(shoe_type: int) -> void:

@@ -22,12 +22,12 @@ const LOCKED_COLOR: Color = Color(0.15, 0.15, 0.18)
 const STAR_COLOR: Color = Color(1, 0.85, 0)
 const STAR_LOCKED_COLOR: Color = Color(0.4, 0.4, 0.4)
 
-const WORLD_ICON_PATHS: Array[String] = [
-	"res://assets/sprites/worlds/world_road.png",
-	"res://assets/sprites/worlds/world_soccer.png",
-	"res://assets/sprites/worlds/world_beach.png",
-	"res://assets/sprites/worlds/world_underwater.png",
-	"res://assets/sprites/worlds/world_volcano.png"
+const WORLD_ICONS: Array[Texture2D] = [
+	preload("res://assets/sprites/worlds/world_road.png"),
+	preload("res://assets/sprites/worlds/world_soccer.png"),
+	preload("res://assets/sprites/worlds/world_beach.png"),
+	preload("res://assets/sprites/worlds/world_underwater.png"),
+	preload("res://assets/sprites/worlds/world_volcano.png")
 ]
 const WORLD_ICON_SIZE: Vector2 = Vector2(80, 80)
 
@@ -87,9 +87,9 @@ func _create_world_card(world_index: int) -> void:
 	icon_container.custom_minimum_size = Vector2(80, 0)
 	hbox.add_child(icon_container)
 
-	if is_unlocked and world_index < WORLD_ICON_PATHS.size():
+	if is_unlocked and world_index < WORLD_ICONS.size():
 		var icon_texture := TextureRect.new()
-		icon_texture.texture = load(WORLD_ICON_PATHS[world_index])
+		icon_texture.texture = WORLD_ICONS[world_index]
 		icon_texture.custom_minimum_size = WORLD_ICON_SIZE
 		icon_texture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon_texture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED

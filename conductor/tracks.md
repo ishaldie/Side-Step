@@ -24,3 +24,9 @@ _Link: [./archive/fix_the_boundaries_on_each_obstacle_to_match_the_visual_202602
 _Link: [./tracks/artwork_update_20260208/](./tracks/artwork_update_20260208/)_
 
 ---
+
+### [ ] Track: cleanup and qa
+
+_Link: [./tracks/cleanup_and_qa_20260208/](./tracks/cleanup_and_qa_20260208/)_
+
+---

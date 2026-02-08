@@ -6,6 +6,7 @@ extends Node
 # CONSTANTS
 # =============================================================================
 
+const SAVE_PATH: String = "user://sidestep_tutorial.cfg"
 const SAVE_KEY: String = "tutorial"
 const TUTORIAL_VERSION: int = 1
 
@@ -222,7 +223,7 @@ func get_control_hints() -> Array[Dictionary]:
 
 func _save_tutorial_state() -> void:
 	var config := ConfigFile.new()
-	if config.load(GameManager.SAVE_PATH) != OK:
+	if config.load(SAVE_PATH) != OK:
 		config = ConfigFile.new()
 	
 	config.set_value(SAVE_KEY, "version", TUTORIAL_VERSION)
@@ -233,12 +234,12 @@ func _save_tutorial_state() -> void:
 	config.set_value(SAVE_KEY, "learned_dash", _learned_dash)
 	config.set_value(SAVE_KEY, "learned_double_jump", _learned_double_jump)
 	config.set_value(SAVE_KEY, "hints_shown", _hints_shown)
-	config.save(GameManager.SAVE_PATH)
+	config.save(SAVE_PATH)
 
 
 func _load_tutorial_state() -> void:
 	var config := ConfigFile.new()
-	if config.load(GameManager.SAVE_PATH) != OK:
+	if config.load(SAVE_PATH) != OK:
 		return
 	
 	_has_seen_tutorial = config.get_value(SAVE_KEY, "completed", false)

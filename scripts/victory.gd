@@ -17,7 +17,7 @@ extends Control
 
 func _ready() -> void:
 	_total_coins_label.text = "Total Coins:  %d" % GameManager.total_coins
-	_add_coin_icon(_total_coins_label)
+	UIUtils.add_coin_icon(_total_coins_label, Vector2(18, 18), Vector2(95, 2))
 	
 	var completed: int = GameManager.get_total_levels_completed()
 	_levels_label.text = "Levels: %d / %d" % [completed, GameManager.TOTAL_LEVELS]
@@ -52,20 +52,6 @@ func _on_play_again_button_pressed() -> void:
 func _on_shop_button_pressed() -> void:
 	AudioManager.play_button()
 	GameManager.go_to_shop()
-
-
-## Adds a HUD coin icon to a label.
-func _add_coin_icon(label: Label) -> void:
-	if label.has_node("CoinIcon"):
-		return
-	var icon := TextureRect.new()
-	icon.name = "CoinIcon"
-	icon.texture = load("res://assets/kenney/hud/hudCoin.png")
-	if icon.texture:
-		icon.custom_minimum_size = Vector2(18, 18)
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.position = Vector2(95, 2)
-		label.add_child(icon)
 
 
 func _on_menu_button_pressed() -> void:

@@ -198,6 +198,7 @@ const PRELOADED_TEXTURES: Dictionary = {
 
 # Active texture set (reference to preloaded textures)
 var _textures: Dictionary = {}
+var _sprite_ground_offset_cache: Dictionary = {}
 
 # Player sprite scale (70x94 Kai sprites)
 # Scale up slightly for better visibility
@@ -210,7 +211,6 @@ const PLAYER_SPRITE_SCALE: Vector2 = Vector2(0.8, 0.8)
 func _ready() -> void:
 	add_to_group("player")
 	_apply_shoe_stats()
-	_load_textures()
 	_apply_shoe_visuals()
 	position = Vector2(START_X, GROUND_Y)
 	_screen_height = get_viewport_rect().size.y
@@ -248,12 +248,7 @@ func _apply_shoe_visuals() -> void:
 	_load_textures()
 	_sprite.texture = _textures.get("stand")
 	_sprite.scale = PLAYER_SPRITE_SCALE
-	# Offset sprite so feet align with ground
-	# Kai sprites are 70x94, scaled at 0.8 = 56x75 rendered
-	# Sprites are bottom-aligned (feet at bottom of image)
-	# Sprite center is at player position, offset to put feet at ground level
-	# Half sprite height = 75/2 = 37.5, so offset by -37 to align feet with ground
-	_sprite.position.y = -37
+	_sprite.position.y = _get_ground_aligned_sprite_offset(_sprite.texture)
 
 
 func _physics_process(delta: float) -> void:
@@ -695,16 +690,41 @@ func _update_animation(delta: float) -> void:
 
 	# Bob up and down while running on ground
 	var running := _state == State.RUNNING and absf(velocity.x) > RUN_BOB_THRESHOLD
-	_sprite.position.y = RUN_BOB_OFFSET if running and _run_frame == 0 else 0.0
+	var bob_offset: float = RUN_BOB_OFFSET if running and _run_frame == 0 else 0.0
+	_sprite.position.y = _get_ground_aligned_sprite_offset(_sprite.texture) + bob_offset
+
+
+func _get_ground_aligned_sprite_offset(texture: Texture2D) -> float:
+	if not texture:
+		return 0.0
+	var cache_key: String = texture.resource_path
+	if cache_key.is_empty():
+		cache_key = str(texture.get_rid().get_id())
+	if _sprite_ground_offset_cache.has(cache_key):
+		return _sprite_ground_offset_cache[cache_key]
+
+	var tex_size: Vector2 = texture.get_size()
+	var visual_bottom_px: float = tex_size.y
+	var image: Image = texture.get_image()
+	if image:
+		var used: Rect2i = image.get_used_rect()
+		if used.size.y > 0:
+			visual_bottom_px = used.position.y + used.size.y
+
+	var offset: float = -((visual_bottom_px - (tex_size.y * 0.5)) * PLAYER_SPRITE_SCALE.y)
+	_sprite_ground_offset_cache[cache_key] = offset
+	return offset
 
 
 func _update_squash_stretch() -> void:
 	# Override squash/stretch when ducking
 	if _state == State.DUCKING:
 		_squash_stretch = DUCK_SQUASH
-	
-	_sprite.scale = _sprite.scale.lerp(_squash_stretch, SQUASH_LERP)
-	
+
+	# Apply squash/stretch relative to base sprite scale
+	var target_scale: Vector2 = PLAYER_SPRITE_SCALE * _squash_stretch
+	_sprite.scale = _sprite.scale.lerp(target_scale, SQUASH_LERP)
+
 	# Only recover if not ducking
 	if _state != State.DUCKING:
 		_squash_stretch = _squash_stretch.lerp(Vector2.ONE, STRETCH_RECOVERY_LERP)

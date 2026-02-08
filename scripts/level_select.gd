@@ -23,6 +23,9 @@ const COLOR_UNLOCKED: Color = Color(0.25, 0.25, 0.3)
 const COLOR_DESCRIPTION: Color = Color(0.65, 0.65, 0.65)
 const COLOR_STAR_EMPTY: Color = Color(0.4, 0.4, 0.4)
 
+const STAR_FILLED_TEX: Texture2D = preload("res://assets/sprites/ui/star_filled.png")
+const STAR_EMPTY_TEX: Texture2D = preload("res://assets/sprites/ui/star_empty.png")
+
 # =============================================================================
 # NODE REFERENCES
 # =============================================================================
@@ -147,9 +150,9 @@ func _create_level_card(level_index: int) -> void:
 	for i in range(3):
 		var star_icon := TextureRect.new()
 		if i < level_stars:
-			star_icon.texture = load("res://assets/sprites/ui/star_filled.png")
+			star_icon.texture = STAR_FILLED_TEX
 		else:
-			star_icon.texture = load("res://assets/sprites/ui/star_empty.png")
+			star_icon.texture = STAR_EMPTY_TEX
 		star_icon.custom_minimum_size = Vector2(18, 18)
 		star_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		star_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED

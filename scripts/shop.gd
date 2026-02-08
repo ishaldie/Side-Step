@@ -16,11 +16,11 @@ const COLOR_LOCKED: Color = Color(0.15, 0.15, 0.2)
 const COLOR_DASH: Color = Color(0.3, 1, 0.5)
 const COLOR_DOUBLE_JUMP: Color = Color(0.3, 0.7, 1)
 
-const SHOE_ICON_PATHS: Array[String] = [
-	"res://assets/sprites/shoes/barefoot.png",
-	"res://assets/sprites/shoes/flip_flops.png",
-	"res://assets/sprites/shoes/running_shoes.png",
-	"res://assets/sprites/shoes/winged_shoes.png"
+const SHOE_ICONS: Array[Texture2D] = [
+	preload("res://assets/sprites/shoes/barefoot.png"),
+	preload("res://assets/sprites/shoes/flip_flops.png"),
+	preload("res://assets/sprites/shoes/running_shoes.png"),
+	preload("res://assets/sprites/shoes/winged_shoes.png")
 ]
 const SHOE_ICON_SIZE: Vector2 = Vector2(55, 55)
 
@@ -86,8 +86,8 @@ func _create_shoe_card(shoe_index: int) -> void:
 	vbox.add_child(header)
 	
 	var icon_texture := TextureRect.new()
-	if shoe_index < SHOE_ICON_PATHS.size():
-		icon_texture.texture = load(SHOE_ICON_PATHS[shoe_index])
+	if shoe_index < SHOE_ICONS.size():
+		icon_texture.texture = SHOE_ICONS[shoe_index]
 	icon_texture.custom_minimum_size = SHOE_ICON_SIZE
 	icon_texture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon_texture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED

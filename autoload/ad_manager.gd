@@ -4,16 +4,16 @@
 ##
 ## Setup:
 ##   1. Install Godot AdMob plugin from Asset Library
-##   2. Replace TEST_MODE with false for production
-##   3. Replace PROD_*_ID constants with your AdMob IDs
+##   2. Replace PROD_*_ID constants with your AdMob IDs
+##   (TEST_MODE auto-detects debug vs release builds)
 extends Node
 
 # =============================================================================
 # CONFIGURATION
 # =============================================================================
 
-## Set to false before release!
-const TEST_MODE: bool = true
+## Automatically uses test ads in debug builds, real ads in release exports.
+var TEST_MODE: bool = OS.is_debug_build()
 
 ## Test Ad Unit IDs (safe for development - Google's official test IDs)
 const TEST_BANNER_ID: String = "ca-app-pub-3940256099942544/6300978111"

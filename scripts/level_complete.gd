@@ -36,7 +36,7 @@ func _ready() -> void:
 	var percentage_text: String = "%d%%" % int(coin_percentage * 100)
 	_coins_label.text = "Coins: %d/%d (%s)" % [GameManager.coins, GameManager.coins_available, percentage_text]
 	_total_coins_label.text = "Total:  %d" % GameManager.total_coins
-	_add_coin_icon(_total_coins_label)
+	UIUtils.add_coin_icon(_total_coins_label, Vector2(18, 18), Vector2(42, 2))
 	_background.color = world_data.bg_color.darkened(0.4)
 
 
@@ -53,29 +53,14 @@ func _create_star_display(earned_stars: int) -> void:
 	for i in range(3):
 		var star_icon := TextureRect.new()
 		if i < earned_stars:
-			star_icon.texture = load("res://assets/kenney/items/star.png")
+			star_icon.texture = load(UIUtils.STAR_ICON_PATH)
 		else:
-			star_icon.texture = load("res://assets/kenney/items/star.png")
-			star_icon.modulate = Color(0.3, 0.3, 0.3, 0.5)
+			star_icon.texture = load(UIUtils.STAR_EMPTY_ICON_PATH)
 		star_icon.custom_minimum_size = Vector2(36, 36)
 		star_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		star_container.add_child(star_icon)
 
 	_stars_label.add_child(star_container)
-
-
-## Adds a HUD coin icon to a label.
-func _add_coin_icon(label: Label) -> void:
-	if label.has_node("CoinIcon"):
-		return
-	var icon := TextureRect.new()
-	icon.name = "CoinIcon"
-	icon.texture = load("res://assets/kenney/hud/hudCoin.png")
-	if icon.texture:
-		icon.custom_minimum_size = Vector2(18, 18)
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.position = Vector2(42, 2)
-		label.add_child(icon)
 
 
 func _input(event: InputEvent) -> void:
