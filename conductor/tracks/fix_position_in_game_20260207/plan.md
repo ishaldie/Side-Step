@@ -5,7 +5,7 @@
 - [x] 6dce4ac **1.2 Add/extend tests** — Failing tests for obstacle classification, spawn lane alignment, and floor/player alignment assumptions (RED phase)
 
 ## Phase 2: Classification & Data
-- [~] **2.1 Define obstacle type field** — Add `jump`/`duck` classification in obstacle config or script
+- [x] d353acf **2.1 Define obstacle type field** — Add `jump`/`duck` classification in obstacle config or script
 - [ ] **2.2 Centralize positioning offsets** — Single source of truth for lane heights and obstacle offsets
 - [ ] **2.3 Update obstacle scenes** — Align sprites/collision shapes to classification
 
