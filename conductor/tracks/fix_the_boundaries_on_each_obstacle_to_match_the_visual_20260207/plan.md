@@ -13,7 +13,7 @@
 
 ## Phase 3: Verification
 
-- [ ] **3.1 Manual review** — Spot-check at least 1 obstacle per world in-game
-- [ ] **3.2 Update changelog** — Document the collision fix
+- [x] 66a52b8 **3.1 Manual review** — Spot-checked in-game; user confirmed "updates look good"
+- [x] 66a52b8 **3.2 Update changelog** — Documented collision fix in CHANGELOG.md v2.8.0
 
 ---

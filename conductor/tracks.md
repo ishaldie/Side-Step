@@ -2,18 +2,18 @@
 
 ---
 
-## [~] Track: Production Readiness — Bug Fixes & Polish
+## [x] Track: Production Readiness — Bug Fixes & Polish
 *Link: [./conductor/tracks/production_readiness_20260207/](./conductor/tracks/production_readiness_20260207/)*
 
 ---
 
-### [ ] Track: Fix position in game.
+### [x] Track: Fix position in game. (Completed: 2026-02-08)
 
-_Link: [./tracks/fix_position_in_game_20260207/](./tracks/fix_position_in_game_20260207/)_
+_Link: [./archive/fix_position_in_game_20260207/](./archive/fix_position_in_game_20260207/)_
 
 ---
 
-### [ ] Track: Fix the boundaries on each obstacle to match the visual.
+### [x] Track: Fix the boundaries on each obstacle to match the visual.
 
 _Link: [./tracks/fix_the_boundaries_on_each_obstacle_to_match_the_visual_20260207/](./tracks/fix_the_boundaries_on_each_obstacle_to_match_the_visual_20260207/)_
 

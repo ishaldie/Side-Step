@@ -34,6 +34,8 @@
 
 ## Improvement Candidates
 
+- [2026-02-08] Track complete. Key lesson: collision shapes should always derive from rendered sprite dimensions, not raw config values. The `_align_to_avoidance_lane()` pattern in obstacle.gd is reusable for any future obstacle type additions.
+
 ### [Type: skill] verify-project-path
 - **Scope:** project
 - **Rationale:** Auto-detect Godot project root by finding project.godot
