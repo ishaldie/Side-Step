@@ -5,7 +5,6 @@
 # Godot export
 export_presets.cfg
 *.pck
-*.zip
 
 # OS generated
 .DS_Store
@@ -20,3 +19,20 @@ desktop.ini
 
 # Build artifacts
 *.tmp
+
+# Non-project directories (kept locally, not in repo)
+_legacy_backups/
+_asset_packs/
+_tools/
+_temp_sprites/
+_scripts/
+_docs/
+_misc/
+sidestep_v2.7.7/
+nul
+
+# AI tool directories
+.claude/
+.codex/
+.cursor/
+.gemini/

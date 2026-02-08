@@ -497,7 +497,12 @@ func _setup_obstacle() -> void:
 	if sprite_info.get("flip_v", false):
 		_sprite.flip_v = true
 
-	_setup_collision(_config.width, _config.height)
+	# Derive collision from rendered sprite size (not raw config dimensions)
+	if _sprite.texture:
+		var rendered_size := _sprite.texture.get_size() * _sprite.scale.abs()
+		_setup_collision(rendered_size.x, rendered_size.y)
+	else:
+		_setup_collision(_config.width, _config.height)
 
 	is_ground_obstacle = _config.ground
 	is_flying = _config.get("flying", false)
