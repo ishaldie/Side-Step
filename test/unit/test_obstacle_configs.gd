@@ -162,63 +162,8 @@ func test_jump_classified_obstacles_not_duck_under():
 			)
 
 # =============================================================================
-# FLOOR / PLAYER ALIGNMENT TESTS
-# =============================================================================
-
-func test_player_ground_y_matches_game_ground_level_y():
-	# Player GROUND_Y and Game GROUND_LEVEL_Y must agree
-	var player_script = load("res://scripts/player.gd")
-	var game_script = load("res://scripts/game.gd")
-	assert_eq(
-		player_script.GROUND_Y,
-		game_script.GROUND_LEVEL_Y,
-		"Player GROUND_Y (%s) must match Game GROUND_LEVEL_Y (%s)" % [
-			player_script.GROUND_Y, game_script.GROUND_LEVEL_Y
-		]
-	)
-
-func test_game_ground_y_matches_ground_level_y():
-	# Game has both GROUND_Y and GROUND_LEVEL_Y — they must be equal
-	var game_script = load("res://scripts/game.gd")
-	assert_eq(
-		game_script.GROUND_Y,
-		game_script.GROUND_LEVEL_Y,
-		"Game GROUND_Y (%s) must match GROUND_LEVEL_Y (%s)" % [
-			game_script.GROUND_Y, game_script.GROUND_LEVEL_Y
-		]
-	)
-
-func test_duck_obstacle_y_above_ground():
-	# DUCK_OBSTACLE_Y must be above GROUND_LEVEL_Y (lower Y = higher on screen)
-	var game_script = load("res://scripts/game.gd")
-	assert_lt(
-		game_script.DUCK_OBSTACLE_Y,
-		game_script.GROUND_LEVEL_Y,
-		"DUCK_OBSTACLE_Y (%s) must be above GROUND_LEVEL_Y (%s)" % [
-			game_script.DUCK_OBSTACLE_Y, game_script.GROUND_LEVEL_Y
-		]
-	)
-
-func test_flying_obstacle_range_above_duck_range():
-	# Flying obstacles should generally be at or above duck height
-	var game_script = load("res://scripts/game.gd")
-	assert_true(
-		game_script.FLYING_OBSTACLE_Y_MAX <= game_script.DUCK_OBSTACLE_Y,
-		"FLYING_OBSTACLE_Y_MAX (%s) should be at or above DUCK_OBSTACLE_Y (%s)" % [
-			game_script.FLYING_OBSTACLE_Y_MAX, game_script.DUCK_OBSTACLE_Y
-		]
-	)
-
-func test_flying_obstacle_y_range_valid():
-	var game_script = load("res://scripts/game.gd")
-	assert_lt(
-		game_script.FLYING_OBSTACLE_Y_MIN,
-		game_script.FLYING_OBSTACLE_Y_MAX,
-		"FLYING_OBSTACLE_Y_MIN should be less than FLYING_OBSTACLE_Y_MAX"
-	)
-
-# =============================================================================
 # SPAWN LANE CONSISTENCY TESTS
+# (Floor/player alignment tests live in test_positioning_alignment.gd)
 # =============================================================================
 
 func test_ground_obstacles_spawn_at_ground():

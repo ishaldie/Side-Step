@@ -3,6 +3,7 @@
 extends GutTest
 
 const OBSTACLE_SCENE = preload("res://scenes/obstacle.tscn")
+const POSITIONING_CONFIG = preload("res://scripts/positioning_config.gd")
 const COLLISION_SIZE_RATIO: float = 0.8
 # Tolerance for floating point comparison (pixels)
 const TOLERANCE: float = 2.0
@@ -34,6 +35,7 @@ func test_collision_width_matches_rendered_sprite_width():
 	for obs_type in test_types:
 		if not _configs.has(obs_type):
 			continue
+		_obstacle.reset()
 		_obstacle.setup(obs_type, 200.0, 650.0)
 		await get_tree().process_frame
 
@@ -62,6 +64,7 @@ func test_collision_height_matches_rendered_sprite_height():
 	for obs_type in test_types:
 		if not _configs.has(obs_type):
 			continue
+		_obstacle.reset()
 		_obstacle.setup(obs_type, 200.0, 650.0)
 		await get_tree().process_frame
 
@@ -90,6 +93,7 @@ func test_all_obstacles_collision_within_rendered_bounds():
 	for obs_type in _configs:
 		if _configs[obs_type].get("projectile", false):
 			continue  # Skip projectiles
+		_obstacle.reset()
 		_obstacle.setup(obs_type, 200.0, 650.0)
 		await get_tree().process_frame
 
@@ -104,16 +108,14 @@ func test_all_obstacles_collision_within_rendered_bounds():
 		if not shape:
 			continue
 
-		assert_le(
-			shape.size.x,
-			rendered_w + TOLERANCE,
+		assert_true(
+			shape.size.x <= rendered_w + TOLERANCE,
 			"Obstacle '%s' collision width (%.1f) exceeds rendered width (%.1f)" % [
 				obs_type, shape.size.x, rendered_w
 			]
 		)
-		assert_le(
-			shape.size.y,
-			rendered_h + TOLERANCE,
+		assert_true(
+			shape.size.y <= rendered_h + TOLERANCE,
 			"Obstacle '%s' collision height (%.1f) exceeds rendered height (%.1f)" % [
 				obs_type, shape.size.y, rendered_h
 			]
@@ -130,6 +132,7 @@ func test_collision_uses_collision_size_ratio():
 	if not _configs.has("tire"):
 		pass_test("tire not in configs")
 		return
+	_obstacle.reset()
 	_obstacle.setup("tire", 200.0, 650.0)
 	await get_tree().process_frame
 
@@ -160,6 +163,7 @@ func test_non_square_texture_collision_aspect_ratio():
 	if not _configs.has("cone"):
 		pass_test("cone not in configs")
 		return
+	_obstacle.reset()
 	_obstacle.setup("cone", 200.0, 650.0)
 	await get_tree().process_frame
 
@@ -190,6 +194,7 @@ func test_duck_under_collision_position_matches_sprite_position():
 	for obs_type in duck_types:
 		if not _configs.has(obs_type):
 			continue
+		_obstacle.reset()
 		_obstacle.setup(obs_type, 200.0, 650.0)
 		await get_tree().process_frame
 
@@ -200,4 +205,27 @@ func test_duck_under_collision_position_matches_sprite_position():
 			collision.position.y,
 			sprite.position.y,
 			"Duck obstacle '%s' collision Y offset should match sprite Y offset" % obs_type
+		)
+
+func test_duck_lane_obstacles_use_centralized_lane_offset():
+	var expected_offset: float = POSITIONING_CONFIG.DUCK_OBSTACLE_Y - POSITIONING_CONFIG.GROUND_Y
+	for obs_type in _configs:
+		var config: Dictionary = _configs[obs_type]
+		if config.get("spawn_lane", "") != "duck_lane":
+			continue
+		_obstacle.reset()
+		_obstacle.setup(obs_type, 200.0, POSITIONING_CONFIG.GROUND_Y)
+		await get_tree().process_frame
+
+		var sprite: Sprite2D = _obstacle.get_node("Sprite")
+		var collision: CollisionShape2D = _obstacle.get_node("CollisionShape2D")
+		assert_eq(
+			sprite.position.y,
+			expected_offset,
+			"Duck-lane obstacle '%s' should use centralized duck-lane offset" % obs_type
+		)
+		assert_eq(
+			collision.position.y,
+			expected_offset,
+			"Duck-lane obstacle '%s' collision should match centralized duck-lane offset" % obs_type
 		)

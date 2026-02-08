@@ -2,6 +2,10 @@
 ## Tests all pure calculation functions
 extends GutTest
 
+func after_each():
+	if ObjectPool:
+		ObjectPool.clear_pools()
+
 # =============================================================================
 # DISTANCE & PROGRESS CALCULATION TESTS
 # =============================================================================

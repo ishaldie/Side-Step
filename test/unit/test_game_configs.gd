@@ -39,8 +39,8 @@ func test_shoe_costs_increase():
 func test_shoe_stats_are_positive():
 	for i in range(GameManager.SHOES.size()):
 		var shoe = GameManager.SHOES[i]
-		assert_gt(shoe.speed, 0, "Shoe %d speed should be positive" % i)
-		assert_gt(shoe.jump_force, 0, "Shoe %d jump_force should be positive" % i)
+		assert_gt(shoe.speed, 0.0, "Shoe %d speed should be positive" % i)
+		assert_gt(shoe.jump_force, 0.0, "Shoe %d jump_force should be positive" % i)
 
 func test_shoe_abilities_are_boolean():
 	for i in range(GameManager.SHOES.size()):
@@ -127,7 +127,7 @@ func test_level_target_distances_positive():
 			var level = GameManager.WORLDS[w].levels[l]
 			assert_gt(
 				level.target_distance,
-				0,
+				0.0,
 				"World %d Level %d target_distance should be positive" % [w, l]
 			)
 
