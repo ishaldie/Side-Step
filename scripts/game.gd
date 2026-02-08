@@ -138,6 +138,7 @@ func _process(delta: float) -> void:
 		return
 
 	GameManager.add_distance(_level_data.obstacle_speed * delta * DISTANCE_SCALE)
+	_bg_generator.update_parallax_scroll(_level_data.obstacle_speed, delta)
 	_update_powerup_timer(delta)
 	_update_ui()
 	
