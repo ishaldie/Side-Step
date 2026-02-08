@@ -22,6 +22,7 @@ desktop.ini
 
 # Non-project directories (kept locally, not in repo)
 _legacy_backups/
+_rollback_tests/
 _asset_packs/
 _tools/
 _temp_sprites/
