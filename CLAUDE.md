@@ -9,13 +9,13 @@
 
 ## Working Directory
 
-The active game project lives at:
+The project root is:
 ```
-Sidestep/sidestep_v2.7.7/sidestep_v2.7.7/
+Sidestep/
 ```
-Always verify the latest version folder before making changes — a newer version directory may exist.
+This is also the git repository root. All project files live here directly (no nested version directories).
 
-**Godot editor:** `Sidestep/_tools/Godot_v4.5.1-stable_win64.exe`
+**Godot editor:** `_tools/Godot_v4.5.1-stable_win64.exe` (relative to project root)
 
 ## Tech Stack
 
@@ -24,7 +24,8 @@ Always verify the latest version folder before making changes — a newer versio
 - **Testing:** GUT (Godot Unit Testing) — 4 test files (3 unit + 1 integration), ~86 tests
 - **Audio:** Procedurally generated SFX, 1 OGG music track (`High_Score_Heart.ogg`), 3 buses (Master, Music, SFX)
 - **Assets:** ~24 custom pixel art sprites + Kenney CC0 packs (fallback for ~48 remaining obstacle types)
-- **CI/CD:** GitHub Actions (`.github/workflows/ci.yml` inside project dir)
+- **CI/CD:** GitHub Actions (`.github/workflows/ci.yml`)
+- **Version Control:** Git with GitHub remote (`github.com/ishaldie/side-step.git`)
 
 ## Architecture
 
@@ -60,24 +61,28 @@ Located in `scripts/`:
 
 ### Project Structure
 ```
-sidestep/
-├── autoload/        # 9 singleton scripts (1,628 LOC)
-├── scripts/         # 16 scene-attached scripts (4,922 LOC)
-├── scenes/          # 13 .tscn scene files
-├── test/            # unit/ (3 files) and integration/ (1 file) — 782 LOC
-├── assets/
-│   ├── kai_sprites/     # Character sprites (4 shoe tiers × 4 poses)
-│   ├── sprites/         # obstacles/, shoes/, worlds/, ui/, powerups/
-│   ├── backgrounds/     # 6 world background PNGs
-│   ├── audio/           # 1 OGG music track
-│   └── ui/              # logos, buttons, hud/, world_tiles/
-│   └── flags/           # 5 level-complete flag sprites
-├── addons/          # GUT testing framework
-├── docs/            # 9 documentation files
-├── conductor/       # Project context files
-├── tools/           # test_sprites.gd utility
+Sidestep/                    ← git repo root
+├── .git/
 ├── .github/workflows/ci.yml
-└── project.godot    # Godot project configuration
+├── .gitignore
+├── CLAUDE.md
+├── project.godot            # Godot project configuration
+├── autoload/                # 9 singleton scripts (1,628 LOC)
+├── scripts/                 # 16 scene-attached scripts (4,922 LOC)
+├── scenes/                  # 13 .tscn scene files
+├── test/                    # unit/ and integration/ tests
+├── assets/                  # sprites, audio, backgrounds, UI
+├── addons/                  # GUT testing framework
+├── docs/                    # 9 documentation files
+├── conductor/               # Project context files
+├── tools/                   # test_sprites.gd utility
+│
+├── _legacy_backups/         (gitignored — version archives v1.0–v2.7.7)
+├── _asset_packs/            (gitignored — Kenney packs, sprite zips)
+├── _tools/                  (gitignored — Godot executable)
+├── _temp_sprites/           (gitignored)
+├── _scripts/                (gitignored — sprite processing utilities)
+└── _docs/                   (gitignored — supplementary docs)
 ```
 
 ### Asset Inventory
@@ -171,7 +176,6 @@ The `conductor/` directory contains persistent project context:
 
 ## Known Issues
 
-- **Beach background bug:** World 3 (Beach) currently uses `grasslands.png` instead of `beach.png` in `background_generator.gd`
 - **Limited animation:** Character has only 1 walk frame per shoe tier — needs 3-4 frame run cycles
 - **Obstacle sprite gap:** ~24/72 obstacles have custom pixel art; remaining ~48 use Kenney fallbacks with color tinting
 - **Music:** Only 1 track (`High_Score_Heart.ogg`); needs per-world music
@@ -192,7 +196,7 @@ The `conductor/` directory contains persistent project context:
 - [x] CI/CD pipeline
 - [x] Privacy policy and age rating docs
 - [x] COPPA-compliant (rated 4+/Everyone)
-- [ ] Fix beach background bug
+- [x] Fix beach background bug
 - [ ] Add character run animation frames (3-4 per shoe tier)
 - [ ] Custom sprites for remaining ~48 obstacle types
 - [ ] Per-world music tracks
@@ -221,38 +225,22 @@ Also at project root: `README.md`, `CHANGELOG.md`, `CHANGELOG.txt`, `GRADE_REPOR
 ## Version Control
 
 ### Git Setup
-- **Git repo root:** `C:/Users/zrina` (home directory — NOT project-specific)
-- **Current branch:** `master` (no commits yet)
-- **Main branch:** `main`
-- **Remote origin:** None configured — all work is local only
-- **CI/CD:** `.github/workflows/ci.yml` exists inside project dir but no remote to push to
-
-### Manual Versioning System
-Since there is no active git workflow, the project uses a **manual directory-based versioning** system:
-1. Each version lives in its own folder: `Sidestep/sidestep_v<version>/sidestep_v<version>/`
-2. Previous versions are archived as zip files in `_archive_versions/` (v2.7.0–v2.7.6)
-3. Legacy versions (v1.0–v1.7.7) archived in `_misc/archive/`
-4. Version number tracked in `project.godot` under `config/version`
+- **Git repo root:** `Sidestep/` (project root)
+- **Branch:** `master`
+- **Remote:** `origin` → `github.com/ishaldie/side-step.git`
+- **CI/CD:** `.github/workflows/ci.yml`
 
 ### Version Bump Process
 1. Update `config/version` in `project.godot`
-2. Copy entire working directory to `sidestep_v<new>/sidestep_v<new>/`
-3. Create zip archive of previous version in `_archive_versions/`
-4. Update `CHANGELOG.md` with changes
+2. Update `CHANGELOG.md` with changes
+3. Commit and tag: `git tag -a v<X.Y.Z> -m "v<X.Y.Z> — description"`
+4. Push: `git push origin master --tags`
 
-### Version History
-| Version | Location | Notes |
-|---------|----------|-------|
-| 1.0–1.7.7 | `_misc/archive/*.zip` | Legacy pre-overhaul releases |
-| 2.7.0–2.7.6 | `_archive_versions/*.zip` | Archived previous releases |
-| **2.7.7** | `sidestep_v2.7.7/` | **Current active version** |
-
-### Recommended: Setting Up Proper Git
-To improve version control, consider:
-1. Initialize a git repo inside the project directory (not home dir)
-2. Add a `.gitignore` for Godot (`.godot/`, `*.import`, `export_presets.cfg`)
-3. Connect to a GitHub/GitLab remote for backup
-4. Use branches for features (`feature/powerups`, `fix/beach-background`, etc.)
+### Legacy Archives
+Previous manual version archives are preserved in `_legacy_backups/` (gitignored):
+- v1.0–v1.9.2: Legacy pre-overhaul releases
+- v2.7.0–v2.7.6: Previous v2 releases
+- v2.7.7: Pre-migration snapshot
 
 ## Important Notes
 
