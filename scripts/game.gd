@@ -10,6 +10,7 @@ const SPAWN_X: float = 550.0
 const POSITIONING_CONFIG = preload("res://scripts/positioning_config.gd")
 const GROUND_LEVEL_Y: float = POSITIONING_CONFIG.GROUND_Y  # Visual ground top (matches player GROUND_Y for feet alignment)
 const DUCK_OBSTACLE_Y: float = POSITIONING_CONFIG.DUCK_OBSTACLE_Y  # Consistent height for duck-under obstacles
+const DUCK_OBSTACLE_CLEAR_BOTTOM_Y: float = POSITIONING_CONFIG.DUCK_OBSTACLE_CLEAR_BOTTOM_Y
 const GROUND_OBSTACLE_CONTACT_PADDING_Y: float = POSITIONING_CONFIG.GROUND_OBSTACLE_CONTACT_PADDING_Y
 const FLYING_OBSTACLE_Y_MIN: float = POSITIONING_CONFIG.FLYING_OBSTACLE_Y_MIN  # Flying obstacle range
 const FLYING_OBSTACLE_Y_MAX: float = POSITIONING_CONFIG.FLYING_OBSTACLE_Y_MAX
@@ -126,8 +127,9 @@ func _input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	if not _game_active or _game_paused:
 		return
-	
+
 	GameManager.add_distance(_level_data.obstacle_speed * delta * DISTANCE_SCALE)
+	_bg_generator.update_parallax_scroll(_level_data.obstacle_speed, delta)
 	_update_ui()
 	
 	# Spawn flag when we reach target distance
@@ -223,8 +225,8 @@ func _spawn_obstacle() -> void:
 	# Calculate Y position based on obstacle type
 	var y_pos: float
 	if avoidance == "duck":
-		# Keep duck obstacles at standing head level so ducking is required and sufficient.
-		y_pos = DUCK_OBSTACLE_Y - (obs_height / 2.0)
+		# Keep duck obstacles at head level where standing collides but ducking clears.
+		y_pos = DUCK_OBSTACLE_CLEAR_BOTTOM_Y - (obs_height / 2.0)
 	elif is_flying:
 		# Flying obstacles at head height range
 		y_pos = randf_range(FLYING_OBSTACLE_Y_MIN, FLYING_OBSTACLE_Y_MAX)

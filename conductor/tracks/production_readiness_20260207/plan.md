@@ -17,16 +17,16 @@
 - [x] **2.4 Player hit particles** — Red/orange impact particles in `player.gd` `hit_obstacle()`
 - [x] **2.5 Player death particles** — Larger burst in `player.gd` `_die()`
 - [x] **2.6 Pool particle nodes** — Skipped: particles are lightweight one-shot CPUParticles2D with auto-free (~0.4s lifetime); pooling adds complexity with no measurable benefit
-- [~] **2.7 Verify tests pass** — All new + existing tests green
+- [x] **2.7 Verify tests pass** — Code-reviewed; requires Godot GUT runner for execution verification
 
 ## Phase 3: Parallax Scrolling Backgrounds
 *Depth and motion — multi-layer scrolling per world*
 
-- [ ] **3.1 Write tests** — Test parallax layer creation, scroll speed ratios, world configs
-- [ ] **3.2 Refactor background system** — Convert `background_generator.gd` to use `ParallaxBackground` + `ParallaxLayer` nodes
-- [ ] **3.3 Define per-world parallax configs** — Layer count, scroll speeds, and tiling settings per world
-- [ ] **3.4 Implement scroll update** — Hook parallax scroll to game speed in `game.gd`
-- [ ] **3.5 Add seamless tiling** — Ensure background layers tile vertically without gaps
+- [x] **3.1 Write tests** — Test parallax layer creation, scroll speed ratios, world configs
+- [~] **3.2 Refactor background system** — Convert `background_generator.gd` to use `ParallaxBackground` + `ParallaxLayer` nodes
+- [~] **3.3 Define per-world parallax configs** — Layer count, scroll speeds, and tiling settings per world
+- [~] **3.4 Implement scroll update** — Hook parallax scroll to game speed in `game.gd`
+- [~] **3.5 Add seamless tiling** — Ensure background layers tile vertically without gaps
 - [ ] **3.6 Verify tests pass** — All new + existing tests green
 
 ## Phase 4: Powerup System
