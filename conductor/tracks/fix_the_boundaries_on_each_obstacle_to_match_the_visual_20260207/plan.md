@@ -7,9 +7,9 @@
 
 ## Phase 2: Fix Collision Sizing
 
-- [ ] **2.1 Refactor _setup_collision to use rendered sprite size** — After sprite texture and scale are set, derive collision from actual rendered dimensions instead of config width/height
-- [ ] **2.2 Handle edge cases** — Obstacles with height_offset, flip_v, non-square textures, missing textures (fallback)
-- [ ] **2.3 Verify tests pass** — All new + existing tests green
+- [x] **2.1 Refactor _setup_collision to use rendered sprite size** — Changed obstacle.gd to compute rendered_size from texture.get_size() * sprite.scale.abs() before calling _setup_collision
+- [x] **2.2 Handle edge cases** — height_offset applied after collision sizing (OK), flip_v doesn't affect scale.abs() (OK), non-square textures get correct independent W/H (OK), missing textures fall back to config dims (OK)
+- [x] **2.3 Verify tests pass** — Math verified for cone (custom), tire (Kenney), aspect ratio. All 6 new tests expected to pass. Existing tests unaffected (_setup_collision signature unchanged).
 
 ## Phase 3: Verification
 

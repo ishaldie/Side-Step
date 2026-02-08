@@ -43,7 +43,7 @@ signal spawn_projectile(projectile_type: String, pos: Vector2, velocity: Vector2
 # OBSTACLE CONFIGURATIONS
 # =============================================================================
 
-const CONFIGS: Dictionary = {
+const BASE_CONFIGS: Dictionary = {
 	# World 1: Road
 	# Jump over: cone, backpack (shoots bananas), bike, hydrant, tire (bounces)
 	# Duck under: barrier (construction barrier at head height), beam (steel beam)
@@ -140,6 +140,28 @@ const CONFIGS: Dictionary = {
 	"fire_tornado": {"color": Color(1, 0.5, 0.2, 0.7), "width": 45, "height": 90, "ground": true, "shape": "funnel", "spins": true},
 	"meteor": {"color": Color(0.5, 0.3, 0.25), "width": 50, "height": 50, "ground": false, "shape": "circle", "flying": true, "falls": true, "duck_under": true}
 }
+
+## Adds explicit classification metadata used by tests and spawn logic.
+static func _with_positioning_metadata(base: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	for obs_type in base.keys():
+		var config: Dictionary = base[obs_type].duplicate(true)
+		var is_duck_obstacle: bool = config.get("duck_under", false)
+		var is_flying_obstacle: bool = config.get("flying", false)
+
+		config["avoidance"] = "duck" if is_duck_obstacle else "jump"
+
+		if is_duck_obstacle and is_flying_obstacle:
+			config["spawn_lane"] = "flying_lane"
+		elif is_duck_obstacle:
+			config["spawn_lane"] = "duck_lane"
+		else:
+			config["spawn_lane"] = "ground"
+
+		result[obs_type] = config
+	return result
+
+static var CONFIGS: Dictionary = _with_positioning_metadata(BASE_CONFIGS)
 
 # =============================================================================
 # EXPORTS
