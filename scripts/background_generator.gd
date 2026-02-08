@@ -13,7 +13,7 @@ const CIRCLE_SEGMENTS: int = 16
 const BACKGROUND_IMAGES: Array[String] = [
 	"res://assets/backgrounds/city.png",        # World 0: Road
 	"res://assets/backgrounds/soccer_field.png", # World 1: Soccer
-	"res://assets/backgrounds/grasslands.png",   # World 2: Beach (using grasslands for now)
+	"res://assets/backgrounds/beach.png",         # World 2: Beach
 	"res://assets/backgrounds/underwater.png",   # World 3: Underwater
 	"res://assets/backgrounds/volcano.png"       # World 4: Volcano
 ]

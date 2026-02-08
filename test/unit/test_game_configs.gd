@@ -181,3 +181,27 @@ func test_total_levels_constant_correct():
 		actual_total,
 		"TOTAL_LEVELS constant should match actual level count"
 	)
+
+# =============================================================================
+# BACKGROUND CONFIG TESTS
+# =============================================================================
+
+func test_background_images_match_worlds():
+	var expected_names := ["city", "soccer_field", "beach", "underwater", "volcano"]
+	assert_eq(
+		BackgroundGenerator.BACKGROUND_IMAGES.size(),
+		expected_names.size(),
+		"Should have one background image per world"
+	)
+	for i in range(expected_names.size()):
+		assert_true(
+			BackgroundGenerator.BACKGROUND_IMAGES[i].contains(expected_names[i]),
+			"World %d background should contain '%s', got '%s'" % [i, expected_names[i], BackgroundGenerator.BACKGROUND_IMAGES[i]]
+		)
+
+func test_background_images_all_exist():
+	for i in range(BackgroundGenerator.BACKGROUND_IMAGES.size()):
+		assert_true(
+			ResourceLoader.exists(BackgroundGenerator.BACKGROUND_IMAGES[i]),
+			"Background image for world %d should exist: %s" % [i, BackgroundGenerator.BACKGROUND_IMAGES[i]]
+		)
