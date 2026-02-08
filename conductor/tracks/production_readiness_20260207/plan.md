@@ -47,8 +47,8 @@
 ## Phase 5: Integration & Version Bump
 *Final verification and release prep*
 
-- [~] **5.1 Full regression test** — Run all tests, verify no regressions
-- [ ] **5.2 Manual play-test checklist** — Test each world with all features active
+- [x] **5.1 Full regression test** — Run all tests, verify no regressions
+- [x] **5.2 Manual play-test checklist** — Test each world with all features active
 - [x] **5.3 Update CHANGELOG.md** — Document all changes for this track
 - [x] **5.4 Version bump** — Update `project.godot` version to 2.8.0 and tag
 - [x] **5.5 Archive previous version** — Already in `_legacy_backups/sidestep_v2.7.7_pre_migration.zip`
