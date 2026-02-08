@@ -7,7 +7,7 @@ extends Node
 # CONSTANTS
 # =============================================================================
 
-const GAME_VERSION: String = "2.7.7"
+const GAME_VERSION: String = "2.8.0"
 
 ## TEST MODE - Set to true to unlock all content and reset tutorial for testing
 const TEST_MODE: bool = true

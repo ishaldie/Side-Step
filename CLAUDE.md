@@ -4,7 +4,7 @@
 
 **Sidestep** is a mobile dodging/parkour game built with **Godot 4.5** and **GDScript**. Five themed worlds, 25 levels, 72 obstacle types, and a shoe progression system. Player character is "Kai." Target platforms: iOS (primary), Android (secondary). Portrait orientation (480x800).
 
-**Current version:** 2.7.7
+**Current version:** 2.8.0
 **Status:** Near production — visual polish and audio still needed before App Store submission.
 
 ## Working Directory

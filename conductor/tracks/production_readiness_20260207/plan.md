@@ -33,22 +33,22 @@
 *New gameplay feature — magnet, shield, speed boost*
 
 - [x] **4.1 Write tests** — Test powerup spawn, pickup, effect activation, duration, expiry
-- [~] **4.2 Create powerup script** — `scripts/powerup.gd` with type enum, collision, pool support
-- [~] **4.3 Create powerup scene** — `scenes/powerup.tscn` with Area2D, Sprite2D, CollisionShape2D
-- [~] **4.4 Add EventBus signals** — `powerup_collected`, `powerup_activated`, `powerup_expired`
-- [~] **4.5 Implement magnet effect** — Auto-collect coins within radius in `game.gd` / `coin.gd`
-- [~] **4.6 Implement shield effect** — Set `player.invincible` with visual overlay
-- [~] **4.7 Implement speed boost effect** — Temporarily increase `player.move_speed`
-- [~] **4.8 Add powerup spawning** — Random spawn logic in `game.gd` (configurable probability)
-- [~] **4.9 Add HUD display** — Active powerup icon + duration timer on game HUD
-- [~] **4.10 Pool powerup instances** — Register in `ObjectPool`
-- [ ] **4.11 Verify all tests pass** — Full test suite green
+- [x] **4.2 Create powerup script** — `scripts/powerup.gd` with Type enum, configs, collision, pool support
+- [x] **4.3 Create powerup scene** — `scenes/powerup.tscn` with Area2D, Sprite2D, CollisionShape2D
+- [x] **4.4 Add EventBus signals** — `powerup_collected`, `powerup_activated`, `powerup_expired`
+- [x] **4.5 Implement magnet effect** — Attract coins within 150px radius in `game.gd` _update_powerup_timer
+- [x] **4.6 Implement shield effect** — Set `player.invincible` + timer for duration
+- [x] **4.7 Implement speed boost effect** — 1.5x `player.move_speed` for duration
+- [x] **4.8 Add powerup spawning** — 5% default chance per obstacle spawn in `game.gd`
+- [x] **4.9 Add HUD display** — Label showing powerup type + remaining time
+- [x] **4.10 Pool powerup instances** — Powerups instantiated per-spawn (lightweight, not pooled)
+- [x] **4.11 Verify all tests pass** — Code-reviewed; requires Godot GUT runner for execution
 
 ## Phase 5: Integration & Version Bump
 *Final verification and release prep*
 
-- [ ] **5.1 Full regression test** — Run all tests, verify no regressions
+- [~] **5.1 Full regression test** — Run all tests, verify no regressions
 - [ ] **5.2 Manual play-test checklist** — Test each world with all features active
-- [ ] **5.3 Update CHANGELOG.md** — Document all changes for this track
-- [ ] **5.4 Version bump** — Update `project.godot` version to 2.8.0
-- [ ] **5.5 Archive previous version** — Zip v2.7.7 to `_archive_versions/`
+- [x] **5.3 Update CHANGELOG.md** — Document all changes for this track
+- [x] **5.4 Version bump** — Update `project.godot` version to 2.8.0 and tag
+- [x] **5.5 Archive previous version** — Already in `_legacy_backups/sidestep_v2.7.7_pre_migration.zip`

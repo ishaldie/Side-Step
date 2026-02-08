@@ -1,5 +1,31 @@
 # Side Step Changelog
 
+## v2.8.0 (2026-02-07)
+
+### New Features
+- **Powerup System** — Magnet, Shield, and Speed Boost collectibles with timed effects
+  - Magnet attracts coins within 150px radius for 5 seconds
+  - Shield grants invincibility for 4 seconds
+  - Speed Boost increases move speed 1.5x for 3 seconds
+  - 5% spawn chance per obstacle, with collect animation and HUD timer display
+- **Particle Effects** — Visual feedback via CPUParticles2D
+  - Gold burst on coin collection (12 particles)
+  - Red-orange impact on player hit (16 particles)
+  - Deep red burst on player death (32 particles)
+- **Parallax Scrolling Backgrounds** — Multi-layer depth effect per world
+  - Far and near layers with per-world speed ratios
+  - Seamless horizontal tiling via motion mirroring
+
+### Bug Fixes
+- Fixed World 3 (Beach) using grasslands.png instead of beach.png
+
+### DevOps
+- Migrated from manual directory versioning to flat Git repo structure
+- Consolidated legacy archives into `_legacy_backups/`
+- Updated .gitignore for non-project directories
+
+---
+
 ## v2.7.7 (2026-02-05)
 
 ### DevOps
