@@ -80,6 +80,13 @@ var _obstacle_configs: Dictionary
 # Background generator instance
 var _bg_generator: BackgroundGenerator
 
+# Powerup state
+var _active_powerup_type: int = -1  # -1 = none
+var _powerup_timer: float = 0.0
+var _original_move_speed: float = 0.0
+var _powerup_scene: PackedScene = null
+var _powerup_hud_label: Label = null
+
 # =============================================================================
 # NODE REFERENCES
 # =============================================================================
@@ -111,7 +118,9 @@ func _ready() -> void:
 	
 	_setup_visuals()
 	_player.died.connect(_on_player_died)
-	
+	EventBus.powerup_collected.connect(_on_powerup_collected)
+	_powerup_scene = load("res://scenes/powerup.tscn")
+
 	_update_ui()
 	_game_over_panel.hide()
 	_pause_panel.hide()
@@ -130,6 +139,7 @@ func _process(delta: float) -> void:
 
 	GameManager.add_distance(_level_data.obstacle_speed * delta * DISTANCE_SCALE)
 	_bg_generator.update_parallax_scroll(_level_data.obstacle_speed, delta)
+	_update_powerup_timer(delta)
 	_update_ui()
 	
 	# Spawn flag when we reach target distance
@@ -161,7 +171,16 @@ func _setup_visuals() -> void:
 
 	# Create themed background using the generator
 	_bg_generator.create_background(GameManager.current_world_index, _world_data)
-	# Ground is now part of the background image - no separate tiles needed
+
+	# Create powerup HUD label (hidden until a powerup is active)
+	_powerup_hud_label = Label.new()
+	_powerup_hud_label.position = Vector2(170, 65)
+	_powerup_hud_label.size = Vector2(140, 20)
+	_powerup_hud_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_powerup_hud_label.add_theme_font_size_override("font_size", 12)
+	_powerup_hud_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.4))
+	_powerup_hud_label.visible = false
+	$UI.add_child(_powerup_hud_label)
 
 
 func _start_game() -> void:
@@ -260,6 +279,11 @@ func _spawn_obstacle() -> void:
 	
 	if random_spawn:
 		_spawn_coin_pattern()
+
+	# Maybe spawn a powerup (default 5% chance per obstacle spawn)
+	var powerup_chance: float = _level_data.get("powerup_chance", 0.05)
+	if powerup_chance > 0.0 and randf() < powerup_chance and _active_powerup_type == -1:
+		_spawn_powerup()
 
 
 ## Spawns a projectile (like bananas from backpacks)
@@ -422,6 +446,86 @@ func _complete_level() -> void:
 	GameManager.complete_level()
 
 # =============================================================================
+# POWERUPS
+# =============================================================================
+
+func _spawn_powerup() -> void:
+	if not _powerup_scene:
+		return
+	var powerup = _powerup_scene.instantiate()
+	var type_val: int = randi() % Powerup.Type.size()
+	var y_pos: float = randf_range(400.0, 600.0)
+	powerup.position = Vector2(SPAWN_X, y_pos)
+	powerup.setup(type_val, _level_data.obstacle_speed, y_pos)
+	_coin_container.add_child(powerup)
+
+
+func _on_powerup_collected(powerup_type: int) -> void:
+	_activate_powerup(powerup_type)
+
+
+func _activate_powerup(powerup_type: int) -> void:
+	# Cancel existing powerup if any
+	if _active_powerup_type != -1:
+		_expire_powerup()
+
+	var config: Dictionary = Powerup.CONFIGS.get(powerup_type, {})
+	if config.is_empty():
+		return
+
+	_active_powerup_type = powerup_type
+	_powerup_timer = config.duration
+	EventBus.powerup_activated.emit(powerup_type, config.duration)
+
+	match powerup_type:
+		Powerup.Type.SHIELD:
+			_player.invincible = true
+			_player.invincible_timer = config.duration
+		Powerup.Type.SPEED_BOOST:
+			_original_move_speed = _player.move_speed
+			_player.move_speed *= config.get("speed_multiplier", 1.5)
+		Powerup.Type.MAGNET:
+			pass  # Handled in _update_powerup_timer via coin attraction
+
+
+func _update_powerup_timer(delta: float) -> void:
+	if _active_powerup_type == -1:
+		return
+
+	_powerup_timer -= delta
+
+	# Magnet effect: attract nearby coins each frame
+	if _active_powerup_type == Powerup.Type.MAGNET:
+		var config = Powerup.CONFIGS[Powerup.Type.MAGNET]
+		var radius: float = config.get("magnet_radius", 150.0)
+		for coin in _coin_container.get_children():
+			if coin is Area2D and coin.has_method("reset"):
+				var dist: float = coin.global_position.distance_to(_player.global_position)
+				if dist < radius:
+					var dir: Vector2 = (_player.global_position - coin.global_position).normalized()
+					coin.position += dir * 300.0 * delta
+
+	if _powerup_timer <= 0.0:
+		_expire_powerup()
+
+
+func _expire_powerup() -> void:
+	match _active_powerup_type:
+		Powerup.Type.SHIELD:
+			_player.invincible = false
+			_player.invincible_timer = 0.0
+		Powerup.Type.SPEED_BOOST:
+			if _original_move_speed > 0.0:
+				_player.move_speed = _original_move_speed
+				_original_move_speed = 0.0
+		Powerup.Type.MAGNET:
+			pass
+
+	EventBus.powerup_expired.emit(_active_powerup_type)
+	_active_powerup_type = -1
+	_powerup_timer = 0.0
+
+# =============================================================================
 # UI
 # =============================================================================
 
@@ -443,6 +547,15 @@ func _update_ui() -> void:
 		_score_label.modulate = Color.YELLOW
 	else:
 		_score_label.modulate = Color.WHITE
+
+	# Powerup HUD
+	if _powerup_hud_label:
+		if _active_powerup_type != -1:
+			var type_name: String = Powerup.Type.keys()[_active_powerup_type]
+			_powerup_hud_label.text = "%s %.1fs" % [type_name, _powerup_timer]
+			_powerup_hud_label.visible = true
+		else:
+			_powerup_hud_label.visible = false
 
 # =============================================================================
 # BUTTON HANDLERS

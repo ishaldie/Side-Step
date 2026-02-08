@@ -27,3 +27,20 @@ signal ad_closed(ad_type: String)
 ## @param reward_type: String
 ## @param reward_amount: int
 signal ad_reward_earned(reward_type: String, reward_amount: int)
+
+# =============================================================================
+# POWERUP EVENTS
+# =============================================================================
+
+## Emitted when a powerup is picked up by the player
+## @param powerup_type: int (Powerup.Type enum value)
+signal powerup_collected(powerup_type: int)
+
+## Emitted when a powerup effect activates on the player
+## @param powerup_type: int
+## @param duration: float
+signal powerup_activated(powerup_type: int, duration: float)
+
+## Emitted when a powerup effect expires
+## @param powerup_type: int
+signal powerup_expired(powerup_type: int)

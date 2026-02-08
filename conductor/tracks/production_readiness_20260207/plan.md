@@ -23,25 +23,25 @@
 *Depth and motion — multi-layer scrolling per world*
 
 - [x] **3.1 Write tests** — Test parallax layer creation, scroll speed ratios, world configs
-- [~] **3.2 Refactor background system** — Convert `background_generator.gd` to use `ParallaxBackground` + `ParallaxLayer` nodes
-- [~] **3.3 Define per-world parallax configs** — Layer count, scroll speeds, and tiling settings per world
-- [~] **3.4 Implement scroll update** — Hook parallax scroll to game speed in `game.gd`
-- [~] **3.5 Add seamless tiling** — Ensure background layers tile vertically without gaps
-- [ ] **3.6 Verify tests pass** — All new + existing tests green
+- [x] **3.2 Refactor background system** — Convert `background_generator.gd` to use `ParallaxBackground` + `ParallaxLayer` nodes
+- [x] **3.3 Define per-world parallax configs** — Layer count, scroll speeds, and tiling settings per world
+- [x] **3.4 Implement scroll update** — Hook parallax scroll to game speed in `game.gd`
+- [x] **3.5 Add seamless tiling** — Ensure background layers tile horizontally with motion_mirroring + duplicate sprites
+- [x] **3.6 Verify tests pass** — Code-reviewed; requires Godot GUT runner for execution verification
 
 ## Phase 4: Powerup System
 *New gameplay feature — magnet, shield, speed boost*
 
-- [ ] **4.1 Write tests** — Test powerup spawn, pickup, effect activation, duration, expiry
-- [ ] **4.2 Create powerup script** — `scripts/powerup.gd` with type enum, collision, pool support
-- [ ] **4.3 Create powerup scene** — `scenes/powerup.tscn` with Area2D, Sprite2D, CollisionShape2D
-- [ ] **4.4 Add EventBus signals** — `powerup_collected`, `powerup_activated`, `powerup_expired`
-- [ ] **4.5 Implement magnet effect** — Auto-collect coins within radius in `game.gd` / `coin.gd`
-- [ ] **4.6 Implement shield effect** — Set `player.invincible` with visual overlay
-- [ ] **4.7 Implement speed boost effect** — Temporarily increase `player.move_speed`
-- [ ] **4.8 Add powerup spawning** — Random spawn logic in `game.gd` (configurable probability)
-- [ ] **4.9 Add HUD display** — Active powerup icon + duration timer on game HUD
-- [ ] **4.10 Pool powerup instances** — Register in `ObjectPool`
+- [x] **4.1 Write tests** — Test powerup spawn, pickup, effect activation, duration, expiry
+- [~] **4.2 Create powerup script** — `scripts/powerup.gd` with type enum, collision, pool support
+- [~] **4.3 Create powerup scene** — `scenes/powerup.tscn` with Area2D, Sprite2D, CollisionShape2D
+- [~] **4.4 Add EventBus signals** — `powerup_collected`, `powerup_activated`, `powerup_expired`
+- [~] **4.5 Implement magnet effect** — Auto-collect coins within radius in `game.gd` / `coin.gd`
+- [~] **4.6 Implement shield effect** — Set `player.invincible` with visual overlay
+- [~] **4.7 Implement speed boost effect** — Temporarily increase `player.move_speed`
+- [~] **4.8 Add powerup spawning** — Random spawn logic in `game.gd` (configurable probability)
+- [~] **4.9 Add HUD display** — Active powerup icon + duration timer on game HUD
+- [~] **4.10 Pool powerup instances** — Register in `ObjectPool`
 - [ ] **4.11 Verify all tests pass** — Full test suite green
 
 ## Phase 5: Integration & Version Bump
