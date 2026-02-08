@@ -4,7 +4,7 @@ extends GutTest
 
 const OBSTACLE_SCENE = preload("res://scenes/obstacle.tscn")
 const POSITIONING_CONFIG = preload("res://scripts/positioning_config.gd")
-const COLLISION_SIZE_RATIO: float = 0.8
+const COLLISION_SIZE_RATIO: float = 1.0
 # Tolerance for floating point comparison (pixels)
 const TOLERANCE: float = 2.0
 
@@ -147,13 +147,13 @@ func test_collision_uses_collision_size_ratio():
 			shape.size.x,
 			rendered_w * COLLISION_SIZE_RATIO,
 			TOLERANCE,
-			"Tire collision width should be rendered_width * 0.8"
+			"Tire collision width should match rendered_width"
 		)
 		assert_almost_eq(
 			shape.size.y,
 			rendered_h * COLLISION_SIZE_RATIO,
 			TOLERANCE,
-			"Tire collision height should be rendered_height * 0.8"
+			"Tire collision height should match rendered_height"
 		)
 
 func test_non_square_texture_collision_aspect_ratio():
@@ -208,7 +208,7 @@ func test_duck_under_collision_position_matches_sprite_position():
 		)
 
 func test_duck_lane_obstacles_use_centralized_lane_offset():
-	var expected_offset: float = POSITIONING_CONFIG.DUCK_OBSTACLE_Y - POSITIONING_CONFIG.GROUND_Y
+	var expected_bottom: float = POSITIONING_CONFIG.DUCK_OBSTACLE_CLEAR_BOTTOM_Y
 	for obs_type in _configs:
 		var config: Dictionary = _configs[obs_type]
 		if config.get("spawn_lane", "") != "duck_lane":
@@ -217,15 +217,14 @@ func test_duck_lane_obstacles_use_centralized_lane_offset():
 		_obstacle.setup(obs_type, 200.0, POSITIONING_CONFIG.GROUND_Y)
 		await get_tree().process_frame
 
-		var sprite: Sprite2D = _obstacle.get_node("Sprite")
 		var collision: CollisionShape2D = _obstacle.get_node("CollisionShape2D")
-		assert_eq(
-			sprite.position.y,
-			expected_offset,
-			"Duck-lane obstacle '%s' should use centralized duck-lane offset" % obs_type
-		)
-		assert_eq(
-			collision.position.y,
-			expected_offset,
-			"Duck-lane obstacle '%s' collision should match centralized duck-lane offset" % obs_type
+		var shape: RectangleShape2D = collision.shape as RectangleShape2D
+		if not shape:
+			continue
+		var collision_bottom: float = _obstacle.position.y + collision.position.y + (shape.size.y * 0.5)
+		assert_almost_eq(
+			collision_bottom,
+			expected_bottom,
+			0.05,
+			"Duck-lane obstacle '%s' collision bottom should use centralized duck-lane clearance" % obs_type
 		)

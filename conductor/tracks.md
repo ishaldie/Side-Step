@@ -18,3 +18,15 @@ _Link: [./tracks/fix_position_in_game_20260207/](./tracks/fix_position_in_game_2
 _Link: [./tracks/fix_the_boundaries_on_each_obstacle_to_match_the_visual_20260207/](./tracks/fix_the_boundaries_on_each_obstacle_to_match_the_visual_20260207/)_
 
 ---
+
+### [x] Track: Artwork Update
+
+_Link: [./archive/artwork_update_20260208/](./archive/artwork_update_20260208/)_
+
+---
+
+### [ ] Track: Artwork update
+
+_Link: [./tracks/artwork_update_20260208/](./tracks/artwork_update_20260208/)_
+
+---

@@ -7,12 +7,11 @@ extends Area2D
 # CONSTANTS
 # =============================================================================
 
-const COLLISION_SIZE_RATIO: float = 0.8
+const COLLISION_SIZE_RATIO: float = 1.0
 const CIRCLE_SEGMENTS: int = 8
 const OFF_SCREEN_LEFT: float = -100.0
 const OFF_SCREEN_BOTTOM: float = 900.0
 const POSITIONING_CONFIG = preload("res://scripts/positioning_config.gd")
-const DUCK_LANE_HEIGHT_OFFSET: float = POSITIONING_CONFIG.DUCK_OBSTACLE_Y - POSITIONING_CONFIG.GROUND_Y
 
 # Behavior constants
 const FLYING_WAVE_FREQUENCY: float = 0.02
@@ -155,9 +154,10 @@ static func _with_positioning_metadata(base: Dictionary) -> Dictionary:
 
 		if is_duck_obstacle and is_flying_obstacle:
 			config["spawn_lane"] = "flying_lane"
+			config["height_offset"] = 0.0
 		elif is_duck_obstacle:
 			config["spawn_lane"] = "duck_lane"
-			config["height_offset"] = DUCK_LANE_HEIGHT_OFFSET
+			config["height_offset"] = 0.0
 		else:
 			config["spawn_lane"] = "ground"
 
@@ -529,13 +529,16 @@ func _setup_obstacle() -> void:
 	else:
 		_setup_collision(_config.width, _config.height)
 
+	_align_to_avoidance_lane()
+
 	is_ground_obstacle = _config.ground
 	is_flying = _config.get("flying", false)
 	is_duck_under = _config.get("duck_under", false)
 	_is_projectile = _config.get("projectile", false)
 
 	# Cache behavior flags (avoid dictionary lookups every frame)
-	_behav_flying = _config.get("flying", false)
+	# Duck obstacles should stay at their configured lane instead of oscillating.
+	_behav_flying = _config.get("flying", false) and _config.get("avoidance", "jump") != "duck"
 	_behav_moves = _config.get("moves", false)
 	_behav_bounces = _config.get("bounces", false)
 	_behav_rolling = _config.get("rolling", false)
@@ -562,6 +565,24 @@ func _setup_collision(width: float, height: float) -> void:
 	var shape := RectangleShape2D.new()
 	shape.size = Vector2(width * COLLISION_SIZE_RATIO, height * COLLISION_SIZE_RATIO)
 	_collision.shape = shape
+
+
+## Aligns obstacle center based on rendered collision size and avoidance profile.
+func _align_to_avoidance_lane() -> void:
+	var shape: RectangleShape2D = _collision.shape as RectangleShape2D
+	if not shape:
+		return
+
+	var half_h: float = shape.size.y * 0.5
+	var avoidance: String = _config.get("avoidance", "jump")
+	var is_flying_obstacle: bool = _config.get("flying", false)
+
+	if avoidance == "duck":
+		position.y = POSITIONING_CONFIG.DUCK_OBSTACLE_CLEAR_BOTTOM_Y - half_h
+	elif not is_flying_obstacle:
+		position.y = POSITIONING_CONFIG.GROUND_Y + POSITIONING_CONFIG.GROUND_OBSTACLE_CONTACT_PADDING_Y - half_h
+
+	start_y = position.y
 
 # =============================================================================
 # BEHAVIORS

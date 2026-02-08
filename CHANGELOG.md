@@ -1,6 +1,6 @@
 # Side Step Changelog
 
-## v2.8.0 (2026-02-07)
+## v2.8.0 (2026-02-08)
 
 ### New Features
 - **Powerup System** — Magnet, Shield, and Speed Boost collectibles with timed effects
@@ -16,8 +16,25 @@
   - Far and near layers with per-world speed ratios
   - Seamless horizontal tiling via motion mirroring
 
+### Positioning & Collision Fixes
+- **Centralized positioning constants** — `positioning_config.gd` is now the single source of truth for ground, duck lane, and flying lane Y positions; `game.gd`, `player.gd`, and `obstacle.gd` import from it
+- **Obstacle avoidance-based lane alignment** — Obstacles now auto-align to jump/duck/flying lanes based on their avoidance profile and rendered collision size
+- **Collision shapes match rendered sprites** — Collision ratio updated to 1.0 (was 0.8), derived from actual rendered sprite dimensions instead of raw config values
+- **Duck-lane obstacle clearance** — Duck obstacles align to `DUCK_OBSTACLE_CLEAR_BOTTOM_Y` so the player can reliably duck under them
+- **Duck obstacles no longer oscillate** — Flying-flagged duck obstacles stay at their configured lane instead of wave-oscillating
+
 ### Bug Fixes
 - Fixed World 3 (Beach) using grasslands.png instead of beach.png
+
+### Testing
+- Added `test_obstacle_boundaries.gd` — collision/visual alignment, ratio consistency, duck-under offset tests
+- Added `test_obstacle_avoidance_profiles.gd` — avoidance intent vs collision geometry tests
+- Added `test_positioning_alignment.gd` — centralized positioning constant validation
+- Fixed stale state bugs in boundary tests (added `reset()` before `setup()`)
+- Removed duplicate alignment tests from `test_obstacle_configs.gd`
+- Added missing `ObjectPool.clear_pools()` cleanup to `test_game_calculations.gd`
+- Fixed `assert_gt` type mismatches (int vs float) in `test_game_configs.gd`
+- Added `TEST_MODE` branching in `test_game_manager.gd` integration tests
 
 ### DevOps
 - Migrated from manual directory versioning to flat Git repo structure

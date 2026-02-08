@@ -10,9 +10,10 @@
 - [x] 17afcd0 **2.3 Update obstacle scenes** — Align sprites/collision shapes to classification
 
 ## Phase 3: Spawn & Alignment
-- [~] **3.1 Enforce spawn rules** — Spawn positions respect `jump`/`duck`
-- [ ] **3.2 Player & floor alignment fix** — Adjust placement to match floor collision consistently
-- [ ] **3.3 Verify in tests** — New + existing tests green
+- [x] bfc0719 **3.1 Enforce spawn rules** — Spawn positions respect `jump`/`duck`
+- [x] bfc0719 **3.2 Player & floor alignment fix** — Adjust placement to match floor collision consistently
+- [x] bfc0719 **3.3 Verify in tests** — New + existing tests green
+[checkpoint: abf7230]
 
 ## Phase 4: Verification
 - [ ] **4.1 Manual review checklist** — Validate in at least one level per world
