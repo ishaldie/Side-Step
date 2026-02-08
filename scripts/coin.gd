@@ -114,6 +114,7 @@ func _on_body_entered(body: Node2D) -> void:
 	_collected = true
 	GameManager.collect_coin(value)
 	AudioManager.play_coin()
+	ParticleEffects.spawn_coin_particles(global_position)
 	
 	# Notify tutorial
 	if TutorialManager:

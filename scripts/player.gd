@@ -719,12 +719,14 @@ func hit_obstacle() -> void:
 		return
 	ScreenEffects.shake_medium()
 	ScreenEffects.flash_red()
+	ParticleEffects.spawn_hit_particles(global_position)
 	_die()
 
 
 func _die() -> void:
 	_change_state(State.DEAD)
-	
+	ParticleEffects.spawn_death_particles(global_position)
+
 	var tween := create_tween()
 	tween.tween_property(self, "rotation", DEATH_ROTATION, DEATH_DURATION)
 	tween.parallel().tween_property(self, "position:y", position.y + DEATH_FALL_DISTANCE, DEATH_DURATION)

@@ -30,6 +30,7 @@ AdManager="*res://autoload/ad_manager.gd"
 Analytics="*res://autoload/analytics.gd"
 TutorialManager="*res://autoload/tutorial_manager.gd"
 UIUtils="*res://autoload/ui_utils.gd"
+ParticleEffects="*res://autoload/particle_effects.gd"
 
 [display]
 

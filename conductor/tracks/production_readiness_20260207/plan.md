@@ -11,13 +11,13 @@
 ## Phase 2: Particle Effects System
 *Visual polish — coin collect, hit, and death particles*
 
-- [ ] **2.1 Write tests** — Test particle creation, emission triggers, and auto-cleanup
-- [ ] **2.2 Create particle manager** — Add `particle_effects.gd` autoload with factory methods for each effect type
-- [ ] **2.3 Coin collection particles** — Gold/yellow burst at coin position in `coin.gd`
-- [ ] **2.4 Player hit particles** — Red/orange impact particles in `player.gd` `hit_obstacle()`
-- [ ] **2.5 Player death particles** — Larger burst in `player.gd` `_die()`
-- [ ] **2.6 Pool particle nodes** — Register particle scenes in `ObjectPool` for reuse
-- [ ] **2.7 Verify tests pass** — All new + existing tests green
+- [x] **2.1 Write tests** — Test particle creation, emission triggers, and auto-cleanup
+- [x] **2.2 Create particle manager** — Add `particle_effects.gd` autoload with factory methods for each effect type
+- [x] **2.3 Coin collection particles** — Gold/yellow burst at coin position in `coin.gd`
+- [x] **2.4 Player hit particles** — Red/orange impact particles in `player.gd` `hit_obstacle()`
+- [x] **2.5 Player death particles** — Larger burst in `player.gd` `_die()`
+- [x] **2.6 Pool particle nodes** — Skipped: particles are lightweight one-shot CPUParticles2D with auto-free (~0.4s lifetime); pooling adds complexity with no measurable benefit
+- [~] **2.7 Verify tests pass** — All new + existing tests green
 
 ## Phase 3: Parallax Scrolling Backgrounds
 *Depth and motion — multi-layer scrolling per world*
