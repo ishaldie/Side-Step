@@ -7,10 +7,12 @@ extends Node2D
 # =============================================================================
 
 const SPAWN_X: float = 550.0
-const GROUND_LEVEL_Y: float = 650.0  # Visual ground top (matches player GROUND_Y for feet alignment)
-const DUCK_OBSTACLE_Y: float = 570.0  # Consistent height for duck-under obstacles
-const FLYING_OBSTACLE_Y_MIN: float = 500.0  # Flying obstacle range
-const FLYING_OBSTACLE_Y_MAX: float = 560.0
+const POSITIONING_CONFIG = preload("res://scripts/positioning_config.gd")
+const GROUND_LEVEL_Y: float = POSITIONING_CONFIG.GROUND_Y  # Visual ground top (matches player GROUND_Y for feet alignment)
+const DUCK_OBSTACLE_Y: float = POSITIONING_CONFIG.DUCK_OBSTACLE_Y  # Consistent height for duck-under obstacles
+const GROUND_OBSTACLE_CONTACT_PADDING_Y: float = POSITIONING_CONFIG.GROUND_OBSTACLE_CONTACT_PADDING_Y
+const FLYING_OBSTACLE_Y_MIN: float = POSITIONING_CONFIG.FLYING_OBSTACLE_Y_MIN  # Flying obstacle range
+const FLYING_OBSTACLE_Y_MAX: float = POSITIONING_CONFIG.FLYING_OBSTACLE_Y_MAX
 
 const COIN_Y_MIN: float = 500.0  # Default min (closer to ground)
 const COIN_Y_MAX: float = 600.0  # Default max
@@ -25,7 +27,7 @@ const COIN_ARC_FREQUENCY: float = 0.6
 # Single jump: Barefoot=117px (Y=533), Flip-flops=138px (Y=512), Running=160px (Y=490), Winged=184px (Y=466)
 # Double jump adds: first_jump_height + (force*0.85)²/(2*980)
 # Flip-flops double: 138 + 100 = 238px total (reaches Y=412)
-const GROUND_Y: float = 650.0
+const GROUND_Y: float = POSITIONING_CONFIG.GROUND_Y
 const GRAVITY: float = 980.0
 
 # World-specific coin heights (Y position, lower = higher on screen)
@@ -216,21 +218,19 @@ func _spawn_obstacle() -> void:
 	var config: Dictionary = _obstacle_configs.get(obs_type, {})
 	var obs_height: float = config.get("height", 40.0)
 	var is_flying: bool = config.get("flying", false)
-	var is_duck_under: bool = config.get("duck_under", false)
-	var height_offset: float = config.get("height_offset", 0.0)
+	var avoidance: String = config.get("avoidance", "jump")
 	
 	# Calculate Y position based on obstacle type
 	var y_pos: float
-	if is_flying:
+	if avoidance == "duck":
+		# Keep duck obstacles at standing head level so ducking is required and sufficient.
+		y_pos = DUCK_OBSTACLE_Y - (obs_height / 2.0)
+	elif is_flying:
 		# Flying obstacles at head height range
 		y_pos = randf_range(FLYING_OBSTACLE_Y_MIN, FLYING_OBSTACLE_Y_MAX)
-	elif is_duck_under and height_offset != 0.0:
-		# Duck-under obstacles that use height_offset (barrier, beam)
-		# Position at ground but the sprite/collision will be raised by height_offset
-		y_pos = GROUND_LEVEL_Y - (obs_height / 2.0)
 	else:
 		# Ground obstacles - bottom of obstacle at ground level
-		y_pos = GROUND_LEVEL_Y - (obs_height / 2.0)
+		y_pos = GROUND_LEVEL_Y - (obs_height / 2.0) + GROUND_OBSTACLE_CONTACT_PADDING_Y
 	
 	obstacle.reset()
 	obstacle.position = Vector2(SPAWN_X, y_pos)

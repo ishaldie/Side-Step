@@ -6,11 +6,11 @@
 
 ## Phase 2: Classification & Data
 - [x] d353acf **2.1 Define obstacle type field** — Add `jump`/`duck` classification in obstacle config or script
-- [ ] **2.2 Centralize positioning offsets** — Single source of truth for lane heights and obstacle offsets
-- [ ] **2.3 Update obstacle scenes** — Align sprites/collision shapes to classification
+- [x] 9d49e80 **2.2 Centralize positioning offsets** — Single source of truth for lane heights and obstacle offsets
+- [x] 17afcd0 **2.3 Update obstacle scenes** — Align sprites/collision shapes to classification
 
 ## Phase 3: Spawn & Alignment
-- [ ] **3.1 Enforce spawn rules** — Spawn positions respect `jump`/`duck`
+- [~] **3.1 Enforce spawn rules** — Spawn positions respect `jump`/`duck`
 - [ ] **3.2 Player & floor alignment fix** — Adjust placement to match floor collision consistently
 - [ ] **3.3 Verify in tests** — New + existing tests green
 

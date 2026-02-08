@@ -11,6 +11,8 @@ const COLLISION_SIZE_RATIO: float = 0.8
 const CIRCLE_SEGMENTS: int = 8
 const OFF_SCREEN_LEFT: float = -100.0
 const OFF_SCREEN_BOTTOM: float = 900.0
+const POSITIONING_CONFIG = preload("res://scripts/positioning_config.gd")
+const DUCK_LANE_HEIGHT_OFFSET: float = POSITIONING_CONFIG.DUCK_OBSTACLE_Y - POSITIONING_CONFIG.GROUND_Y
 
 # Behavior constants
 const FLYING_WAVE_FREQUENCY: float = 0.02
@@ -155,6 +157,7 @@ static func _with_positioning_metadata(base: Dictionary) -> Dictionary:
 			config["spawn_lane"] = "flying_lane"
 		elif is_duck_obstacle:
 			config["spawn_lane"] = "duck_lane"
+			config["height_offset"] = DUCK_LANE_HEIGHT_OFFSET
 		else:
 			config["spawn_lane"] = "ground"
 

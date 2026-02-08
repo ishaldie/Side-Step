@@ -32,7 +32,8 @@ var _state: State = State.IDLE
 # =============================================================================
 
 const GRAVITY: float = 980.0
-const GROUND_Y: float = 650.0
+const POSITIONING_CONFIG = preload("res://scripts/positioning_config.gd")
+const GROUND_Y: float = POSITIONING_CONFIG.GROUND_Y
 const SCREEN_LEFT_BOUND: float = 40.0
 const SCREEN_RIGHT_BOUND: float = 440.0
 const START_X: float = 120.0
