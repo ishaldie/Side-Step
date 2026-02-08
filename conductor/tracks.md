@@ -2,7 +2,7 @@
 
 ---
 
-## [x] Track: Production Readiness — Bug Fixes & Polish
+## [x] Track: Production Readiness ï¿½ Bug Fixes & Polish
 *Link: [./conductor/tracks/production_readiness_20260207/](./conductor/tracks/production_readiness_20260207/)*
 
 ---
