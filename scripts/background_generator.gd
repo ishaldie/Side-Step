@@ -49,14 +49,23 @@ func _init(parent: Node2D) -> void:
 func create_background(world_index: int, world_data: Dictionary) -> void:
 	_world_index = world_index
 
-	# Try to load background image with parallax
+	# Try to load background image
 	if world_index < BACKGROUND_IMAGES.size() and ResourceLoader.exists(BACKGROUND_IMAGES[world_index]):
 		var bg_texture: Texture2D = load(BACKGROUND_IMAGES[world_index])
 		if bg_texture:
-			_create_parallax_background(bg_texture, world_index)
-			return  # Use parallax background, skip procedural
+			# Use simple Sprite2D (ParallaxBackground requires Camera2D which this scene lacks)
+			var bg_sprite := Sprite2D.new()
+			bg_sprite.texture = bg_texture
+			bg_sprite.z_index = -100
+			bg_sprite.position = Vector2(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0)
+			var scale_x: float = SCREEN_WIDTH / bg_texture.get_width()
+			var scale_y: float = SCREEN_HEIGHT / bg_texture.get_height()
+			var scale_factor: float = max(scale_x, scale_y)
+			bg_sprite.scale = Vector2(scale_factor, scale_factor)
+			_parent.add_child(bg_sprite)
+			return  # Use image background, skip procedural
 
-	# Fallback to procedural backgrounds (no parallax)
+	# Fallback to procedural backgrounds
 	_create_sky_gradient(world_data)
 
 	match world_index:
@@ -68,9 +77,10 @@ func create_background(world_index: int, world_data: Dictionary) -> void:
 
 
 ## Updates parallax scroll offset. Call from game._process().
-func update_parallax_scroll(obstacle_speed: float, delta: float) -> void:
-	if _parallax_bg:
-		_parallax_bg.scroll_offset.x -= obstacle_speed * delta
+## Note: Currently a no-op because ParallaxBackground requires Camera2D.
+## The parallax infrastructure is preserved for when a camera is added.
+func update_parallax_scroll(_obstacle_speed: float, _delta: float) -> void:
+	pass
 
 
 ## Creates a ParallaxBackground with far and near tiling layers.
