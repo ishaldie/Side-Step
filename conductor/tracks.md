@@ -25,7 +25,7 @@ _Link: [./tracks/artwork_update_20260208/](./tracks/artwork_update_20260208/)_
 
 ---
 
-### [ ] Track: cleanup and qa
+### [x] Track: cleanup and qa
 
 _Link: [./tracks/cleanup_and_qa_20260208/](./tracks/cleanup_and_qa_20260208/)_
 
